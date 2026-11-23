@@ -1,0 +1,34 @@
+{
+  "users": [
+    {
+      "id": "mwtgb0frc41cac2e",
+      "name": "fastffastfast",
+      "username": "fastffastfast",
+      "passwordHash": "5bb5c8a9ff8913f37b08238ccb111503:ab3cedd28a6917d67bf85f94a00df88c444c42317e2d6fa33c01f91eeabeda500e0447e6aa18630e63e767365034313b73fa2aeb9414356184708b9f62347b05",
+      "createdAt": "2026-11-23T15:59:11.607Z",
+      "lastLoginAt": "2026-11-23T15:59:11.607Z"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "5411958ebf51a591dbd22df8d2c8ff9756ee314643d1804962932560249eaef0",
+      "role": "user",
+      "userId": "mwtgb0frc41cac2e",
+      "createdAt": "2026-11-23T15:59:11.663Z",
+      "expiresAt": 1798041551663
+    },
+    {
+      "token": "a5a2be6bdb9060b2858ed024f178db1009a79d9cd864b2e8a0e3dbe9bb6ccdfc",
+      "role": "admin",
+      "userId": null,
+      "createdAt": "2026-11-23T15:59:33.832Z",
+      "expiresAt": 1795492773832
+    }
+  ],
+  "submissions": [],
+  "hwids": [],
+  "config": {
+    "botToken": "9210440740:AAHzR1hWD10FIqPMz3qYLij0NqWsCLuHZBc",
+    "chatId": "8732686137"
+  }
+}

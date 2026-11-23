@@ -1,0 +1,2997 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>h token</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script>
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            obsidian: '#050507',
+                            carbon: '#0B0B0F',
+                            crimson: {
+                                500: '#EF4444',
+                                600: '#DC2626',
+                                700: '#B91C1C',
+                                900: '#7F1D1D',
+                            }
+                        }
+                    }
+                }
+            };
+        }
+    </script>
+    <style>
+        :root {
+            --font-ar: 'Cairo', sans-serif;
+            --font-en: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #050507;
+            color: #F4F4F6;
+            font-family: var(--font-ar);
+            overflow-x: hidden;
+        }
+
+        html[lang="en"] body {
+            font-family: var(--font-en);
+        }
+
+        /* Cyber Grid & Ambient Lighting */
+        .cyber-bg {
+            background-color: #050507;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(220, 38, 38, 0.22), transparent 55%),
+                radial-gradient(circle at 85% 85%, rgba(153, 27, 27, 0.14), transparent 45%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 38px 38px, 38px 38px;
+        }
+
+        /* Glass Card with Crimson Top Border */
+        .glass-card {
+            background: linear-gradient(165deg, rgba(18, 18, 24, 0.88) 0%, rgba(10, 10, 13, 0.94) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 40px -20px rgba(220, 38, 38, 0.35);
+            position: relative;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #EF4444, #DC2626, transparent);
+            border-radius: 999px;
+        }
+
+        /* Input Styling */
+        .cyber-input {
+            background: rgba(8, 8, 11, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cyber-input:hover {
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        .cyber-input:focus {
+            outline: none;
+            border-color: #EF4444;
+            background: rgba(14, 14, 19, 0.95);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16), 0 8px 20px -6px rgba(220, 38, 38, 0.25);
+        }
+
+        /* Dropzone */
+        .drop-zone {
+            background: repeating-linear-gradient(-45deg,
+                    rgba(15, 15, 20, 0.6),
+                    rgba(15, 15, 20, 0.6) 10px,
+                    rgba(22, 12, 14, 0.5) 10px,
+                    rgba(22, 12, 14, 0.5) 20px);
+            border: 1.5px dashed rgba(239, 68, 68, 0.38);
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: #EF4444;
+            background: rgba(220, 38, 38, 0.08);
+            box-shadow: inset 0 0 25px rgba(220, 38, 38, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* Primary Button */
+        .btn-crimson {
+            background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+            box-shadow: 0 10px 28px -6px rgba(220, 38, 38, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-crimson:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 34px -6px rgba(239, 68, 68, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            filter: brightness(1.06);
+        }
+
+        .btn-crimson:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #09090B;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #DC2626;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-enter {
+            animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+
+<body class="cyber-bg min-h-screen flex flex-col justify-between selection:bg-red-600 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="w-full border-b border-white/[0.06] bg-black/50 backdrop-blur-xl sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 min-h-16 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand + Live Date -->
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-800 flex items-center justify-center shadow-lg shadow-red-600/30 border border-red-400/30 shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                    <h1 id="brandTitle" class="text-lg sm:text-xl font-black tracking-tight text-white">h token</h1>
+                    <span class="hidden sm:inline-block h-4 w-[1px] bg-white/15"></span>
+                    <div id="liveDateBadge"
+                        class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-red-400 bg-red-950/40 border border-red-500/25 px-3 py-1 rounded-full">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                        <span id="liveDateText"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Navigation Pills -->
+            <nav id="publicNav" class="flex items-center gap-1.5 bg-white/[0.03] border border-white/10 p-1 rounded-xl">
+                <button type="button" id="navSubmitBtn" onclick="switchPublicPage('submit')"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+                    تسليم
+                </button>
+                <button type="button" id="navHistoryBtn" onclick="switchPublicPage('history')"
+                    class="hidden px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5">
+                    <span id="navHistoryLabel">تسليماتي</span>
+                    <span id="navHistoryCount"
+                        class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-white/15 text-white">0</span>
+                </button>
+                <button type="button" id="navActivationBtn" onclick="switchPublicPage('activation')"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+                    تفعيل
+                </button>
+                <button type="button" id="navVortexBtn" onclick="switchPublicPage('vortex')"
+                    class="hidden px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+                    كيهات فورتكس
+                </button>
+            </nav>
+
+            <!-- Right Controls -->
+            <div class="flex items-center gap-2">
+                <!-- Logged-in User Chip -->
+                <div id="userChip"
+                    class="hidden items-center gap-2 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-xs">
+                    <span id="headerUserName" class="font-bold text-white max-w-[110px] truncate"></span>
+                    <button type="button" onclick="logoutUser()" id="logoutBtnText"
+                        class="text-red-400 hover:text-red-300 font-bold cursor-pointer">خروج</button>
+                </div>
+
+                <!-- Login Button (Logged Out) -->
+                <button type="button" id="headerLoginBtn" onclick="switchPublicPage('auth')"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600/20 hover:bg-red-600/35 text-red-300 border border-red-500/30 transition cursor-pointer">
+                    تسجيل دخول
+                </button>
+
+                <!-- Language Toggle -->
+                <button id="langToggle" onclick="toggleLanguage()"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/[0.04] hover:bg-white/[0.09] text-zinc-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                    <span id="langBtnText">EN</span>
+                </button>
+
+                <!-- Admin Button -->
+                <button onclick="openAdminModal()"
+                    class="p-2 rounded-lg bg-white/[0.04] hover:bg-red-600/20 text-zinc-400 hover:text-red-400 border border-white/10 hover:border-red-500/40 transition cursor-pointer"
+                    title="Admin Panel">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Public Portal -->
+    <main id="publicPortalView" class="flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
+        <div class="w-full max-w-2xl animate-enter">
+
+            <!-- 1) Auth View (Login & Create Account) -->
+            <section id="authView" class="glass-card rounded-3xl p-6 sm:p-10 max-w-md mx-auto">
+                <div class="text-center mb-6">
+                    <div
+                        class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/25 text-red-500 mb-3 shadow-inner">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <h2 id="authHeading" class="text-2xl font-extrabold text-white tracking-tight">حسابك في h token</h2>
+                    <p id="authSubheading" class="text-zinc-400 text-xs sm:text-sm mt-1.5">
+                        سجّل مرة واحدة عشان اسمك يتحفظ وتابع تسليماتك بسهولة
+                    </p>
+                </div>
+
+                <!-- Login / Register Tab Switch -->
+                <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-black/60 border border-white/10 mb-5">
+                    <button type="button" id="authTabLogin" onclick="switchAuthTab('login')"
+                        class="py-2 rounded-lg text-xs font-bold bg-red-600 text-white transition cursor-pointer">
+                        تسجيل الدخول
+                    </button>
+                    <button type="button" id="authTabRegister" onclick="switchAuthTab('register')"
+                        class="py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition cursor-pointer">
+                        إنشاء حساب
+                    </button>
+                </div>
+
+                <!-- Auth Alert -->
+                <div id="authAlertBox" role="alert"
+                    class="hidden mb-4 rounded-xl p-3 text-xs font-semibold bg-red-950/70 border border-red-500/40 text-red-300">
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label for="loginUsername" id="labelLoginUser"
+                            class="block text-xs font-bold text-zinc-300 mb-1.5">اسم المستخدم</label>
+                        <input type="text" id="loginUsername" required dir="ltr" placeholder="username"
+                            class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 font-mono" />
+                    </div>
+                    <div>
+                        <label for="loginPassword" id="labelLoginPass"
+                            class="block text-xs font-bold text-zinc-300 mb-1.5">كلمة المرور</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••"
+                            class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600" />
+                    </div>
+                    <button type="submit" id="loginSubmitBtn"
+                        class="btn-crimson w-full py-3.5 rounded-xl text-white font-extrabold text-sm cursor-pointer">
+                        دخول
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" onsubmit="handleRegister(event)" class="hidden space-y-4">
+                    <div>
+                        <label for="regName" id="labelRegName"
+                            class="block text-xs font-bold text-zinc-300 mb-1.5">الاسم (الذي سيظهر في التسليمات) <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" id="regName" required placeholder="اسمك"
+                            class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600" />
+                    </div>
+                    <div>
+                        <label for="regUsername" id="labelRegUser"
+                            class="block text-xs font-bold text-zinc-300 mb-1.5">اسم المستخدم (بالإنجليزي) <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" id="regUsername" required dir="ltr" placeholder="mohamed_1"
+                            class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 font-mono" />
+                    </div>
+                    <div>
+                        <label for="regPassword" id="labelRegPass"
+                            class="block text-xs font-bold text-zinc-300 mb-1.5">كلمة المرور <span
+                                class="text-red-500">*</span></label>
+                        <input type="password" id="regPassword" required placeholder="••••••••"
+                            class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600" />
+                    </div>
+                    <button type="submit" id="regSubmitBtn"
+                        class="btn-crimson w-full py-3.5 rounded-xl text-white font-extrabold text-sm cursor-pointer">
+                        إنشاء الحساب والدخول
+                    </button>
+                </form>
+
+                <div class="mt-5 pt-4 border-t border-white/10 text-center">
+                    <button type="button" onclick="switchPublicPage('activation')" id="authActivationHint"
+                        class="text-xs font-semibold text-zinc-400 hover:text-red-400 transition cursor-pointer">
+                        تحتاج تفعيل أداة؟ انتقل إلى صفحة التفعيل
+                    </button>
+                </div>
+            </section>
+
+            <!-- 2) Submission View (Logged In Users) -->
+            <section id="submitView" class="hidden glass-card rounded-3xl p-6 sm:p-10 max-w-xl mx-auto">
+                <!-- Card Header -->
+                <div class="text-center mb-7">
+                    <div
+                        class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/25 text-red-500 mb-4 shadow-inner">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                    </div>
+                    <h2 id="formHeading" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">تسليم</h2>
+                    <p id="formSubheading" class="text-zinc-400 text-sm sm:text-base mt-2">دخل رقم الكاش واسم التول والملف txt</p>
+
+                    <!-- Active Account Banner (Name attached automatically) -->
+                    <div
+                        class="mt-4 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10 text-xs">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span id="accountLabelPrefix" class="text-zinc-400">الاسم:</span>
+                        <span id="submitAccountName" class="font-bold text-white"></span>
+                        <span class="text-white/20">|</span>
+                        <button type="button" onclick="switchPublicPage('history')"
+                            class="text-red-400 hover:text-red-300 font-bold cursor-pointer">
+                            <span id="submitHistoryCountText">تسليماتي</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submission Form -->
+                <form id="reportForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                    <!-- Cash Number & Tool Name Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="cashNumber" id="labelCash"
+                                class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+                                رقم الكاش <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="cashNumber" required placeholder="010XXXXXXXX"
+                                class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 font-mono"
+                                dir="ltr" />
+                        </div>
+                        <div>
+                            <label for="toolName" id="labelTool"
+                                class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+                                اسم التول <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="toolName" required placeholder="اكتب اسم التول..."
+                                class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600" />
+                        </div>
+                    </div>
+
+                    <!-- Optional Notes -->
+                    <div>
+                        <label for="empNotes" id="labelNotes"
+                            class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+                            ملاحظات <span class="text-zinc-500 font-normal">(اختياري)</span>
+                        </label>
+                        <input type="text" id="empNotes" placeholder="أي تفاصيل إضافية..."
+                            class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600" />
+                    </div>
+
+                    <!-- File Dropzone (.txt only, max 5MB) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label id="labelFile"
+                                class="block text-xs font-bold uppercase tracking-wider text-zinc-300">
+                                الملف <span class="text-red-500">*</span>
+                            </label>
+                            <span id="maxSizeBadge" class="text-[11px] font-medium text-zinc-500">TXT • حد أقصى 5 MB</span>
+                        </div>
+
+                        <div id="dropZone" onclick="document.getElementById('fileInput').click()"
+                            class="drop-zone rounded-2xl p-6 text-center cursor-pointer relative group">
+                            <input type="file" id="fileInput" accept=".txt,text/plain" class="hidden"
+                                onchange="handleFileSelect(this.files[0])" />
+
+                            <div id="dropEmptyState" class="space-y-2.5">
+                                <div
+                                    class="w-12 h-12 mx-auto rounded-full bg-red-500/10 group-hover:bg-red-500/20 border border-red-500/20 flex items-center justify-center text-red-500 transition">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                    </svg>
+                                </div>
+                                <p id="dropMainText" class="text-sm font-semibold text-zinc-200">اضغط لاختيار الملف أو اسحبه هنا</p>
+                                <p id="dropSubText" class="text-xs text-zinc-500">يُسمح بملفات <span
+                                        class="text-red-400 font-mono font-bold">.txt</span> فقط</p>
+                            </div>
+
+                            <div id="dropSelectedState" class="hidden">
+                                <div
+                                    class="flex items-center justify-between bg-black/60 border border-red-500/30 rounded-xl p-3.5 text-start">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div
+                                            class="w-10 h-10 rounded-lg bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-400 shrink-0 font-mono text-xs font-bold">
+                                            TXT
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p id="selectedFileName" class="text-sm font-bold text-white truncate">report.txt</p>
+                                            <p id="selectedFileSize" class="text-xs text-zinc-400 font-mono">12 KB</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="clearSelectedFile(event)"
+                                        class="p-2 rounded-lg hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="mt-3 text-start">
+                                    <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1 px-1">
+                                        <span id="previewLabel">معاينة المحتوى</span>
+                                        <span class="text-emerald-400 font-mono">UTF-8 OK</span>
+                                    </div>
+                                    <pre id="filePreviewBox"
+                                        class="bg-black/80 border border-white/10 rounded-xl p-3 text-xs text-zinc-300 font-mono max-h-28 overflow-y-auto whitespace-pre-wrap break-words leading-relaxed"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional Check Screenshot -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label id="labelCheckImg"
+                                class="block text-xs font-bold uppercase tracking-wider text-zinc-300">
+                                صورة الفحص <span class="text-zinc-500 font-normal">(اختياري)</span>
+                            </label>
+                            <span id="imgHintBadge" class="text-[11px] font-medium text-zinc-500">صورة • استخراج تلقائي</span>
+                        </div>
+
+                        <div id="imgDropZone" onclick="document.getElementById('checkImgInput').click()"
+                            class="drop-zone rounded-2xl p-5 text-center cursor-pointer relative group">
+                            <input type="file" id="checkImgInput" accept="image/*" class="hidden"
+                                onchange="handleImageSelect(this.files[0])" />
+
+                            <div id="imgEmptyState" class="space-y-2">
+                                <div
+                                    class="w-11 h-11 mx-auto rounded-full bg-red-500/10 group-hover:bg-red-500/20 border border-red-500/20 flex items-center justify-center text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <p id="imgMainText" class="text-sm font-semibold text-zinc-200">اضغط لرفع صورة الفحص أو اسحبها / الصقها هنا</p>
+                                <p id="imgSubText" class="text-xs text-zinc-500">اختياري — يتم أخذ <span class="text-emerald-400 font-mono font-bold">VALID</span> و <span class="text-amber-300 font-mono font-bold">MAIL LOCKED</span> فقط</p>
+                            </div>
+
+                            <div id="imgSelectedState" class="hidden space-y-3">
+                                <div
+                                    class="flex items-center justify-between bg-black/60 border border-red-500/30 rounded-xl p-3 text-start">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img id="checkImgThumb" alt="Check preview"
+                                            class="w-12 h-12 rounded-lg object-cover border border-white/15 shrink-0 bg-black" />
+                                        <div class="min-w-0">
+                                            <p id="selectedImgName" class="text-sm font-bold text-white truncate">check.png</p>
+                                            <p id="selectedImgSize" class="text-xs text-zinc-400 font-mono">24 KB</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="clearSelectedImage(event)"
+                                        class="p-2 rounded-lg hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div id="imgScanStatus"
+                                    class="text-xs font-semibold px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-zinc-300 text-start">
+                                </div>
+
+                                <div id="extractedStatsBox" class="hidden grid grid-cols-2 gap-3 text-start">
+                                    <div class="bg-emerald-950/35 border border-emerald-500/30 rounded-xl px-3.5 py-2.5">
+                                        <div class="text-[11px] font-mono uppercase tracking-wider text-emerald-400">VALID</div>
+                                        <div id="extractedValidVal" class="text-lg font-extrabold font-mono text-white mt-0.5">-</div>
+                                    </div>
+                                    <div class="bg-amber-950/35 border border-amber-500/30 rounded-xl px-3.5 py-2.5">
+                                        <div class="text-[11px] font-mono uppercase tracking-wider text-amber-300">MAIL LOCKED</div>
+                                        <div id="extractedMailLockedVal" class="text-lg font-extrabold font-mono text-white mt-0.5">-</div>
+                                    </div>
+                                </div>
+
+                                <div id="imgFallbackBox" onclick="event.stopPropagation()"
+                                    class="hidden grid grid-cols-2 gap-3 text-start pt-1">
+                                    <div>
+                                        <label for="manualValidInput" class="block text-[11px] font-mono text-emerald-400 mb-1">VALID *</label>
+                                        <input type="number" min="0" id="manualValidInput" placeholder="0" dir="ltr"
+                                            class="cyber-input w-full rounded-xl px-3 py-2 text-sm text-white font-mono" />
+                                    </div>
+                                    <div>
+                                        <label for="manualMailLockedInput" class="block text-[11px] font-mono text-amber-300 mb-1">MAIL LOCKED *</label>
+                                        <input type="number" min="0" id="manualMailLockedInput" placeholder="0" dir="ltr"
+                                            class="cyber-input w-full rounded-xl px-3 py-2 text-sm text-white font-mono" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error / Alert Banner -->
+                    <div id="alertBox" class="hidden rounded-xl p-3.5 text-xs font-semibold flex items-center gap-2.5">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn"
+                        class="btn-crimson w-full py-3.5 px-6 rounded-xl text-white font-extrabold text-base tracking-wide flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="submitBtnText">إرسال</span>
+                        <svg id="submitIcon" class="w-5 h-5 rtl:rotate-180" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+                </form>
+
+                <!-- Success Overlay View -->
+                <div id="successView" class="hidden text-center py-6 space-y-5 animate-enter">
+                    <div
+                        class="w-20 h-20 mx-auto rounded-full bg-emerald-500/10 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/20">
+                        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 id="successTitle" class="text-2xl font-extrabold text-white">تم الإرسال بنجاح!</h3>
+                        <p id="successDesc" class="text-zinc-400 text-sm mt-1.5">تم استلام ملفك وبياناتك بنجاح.</p>
+                    </div>
+                    <div id="receiptCard"
+                        class="bg-black/60 border border-white/10 rounded-2xl p-4 text-start text-xs space-y-2 font-mono text-zinc-300">
+                    </div>
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <button onclick="resetForm()" id="sendAnotherBtn"
+                            class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm transition cursor-pointer">
+                            إرسال ملف آخر
+                        </button>
+                        <button onclick="switchPublicPage('history')" id="viewMyHistoryBtn"
+                            class="btn-crimson px-6 py-3 rounded-xl text-white font-bold text-sm cursor-pointer">
+                            عرض تسليماتي
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3) Logged-in User's Own Submissions History -->
+            <section id="myHistoryView" class="hidden space-y-5">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-5">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h2 id="myHistoryTitle" class="text-xl sm:text-2xl font-extrabold text-white">سجل تسليماتي</h2>
+                            <p id="myHistorySubtitle" class="text-xs text-zinc-400 mt-1">إجمالي الملفات التي سلمتها وتواريخها</p>
+                        </div>
+                        <button type="button" onclick="switchPublicPage('submit')" id="myHistoryNewBtn"
+                            class="btn-crimson px-4 py-2 rounded-xl text-white text-xs font-bold cursor-pointer">
+                            تسليم ملف جديد
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="bg-black/50 border border-white/10 rounded-2xl p-4">
+                            <div id="myStatFilesLabel" class="text-xs text-zinc-400">عدد الملفات المسلمة</div>
+                            <div id="myTotalFiles" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                        </div>
+                        <div class="bg-emerald-950/30 border border-emerald-500/25 rounded-2xl p-4">
+                            <div class="text-xs font-mono text-emerald-400">TOTAL VALID</div>
+                            <div id="myTotalValid" class="text-2xl font-extrabold font-mono text-emerald-400 mt-1">0</div>
+                        </div>
+                        <div class="bg-amber-950/30 border border-amber-500/25 rounded-2xl p-4">
+                            <div class="text-xs font-mono text-amber-300">TOTAL MAIL LOCKED</div>
+                            <div id="myTotalMailLocked" class="text-2xl font-extrabold font-mono text-amber-300 mt-1">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mySubmissionsList" class="space-y-3"></div>
+            </section>
+
+            <!-- 4) Activation Page (تفعيل - HWID + Tool Name only) -->
+            <section id="activationView" class="hidden space-y-5 max-w-xl mx-auto">
+                <div class="glass-card rounded-3xl p-6 sm:p-10">
+                    <div class="text-center mb-7">
+                        <div
+                            class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/25 text-red-500 mb-4 shadow-inner">
+                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                            </svg>
+                        </div>
+                        <h2 id="actHeading" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">تفعيل</h2>
+                        <p id="actSubheading" class="text-zinc-400 text-sm mt-2">
+                            حط كود الـ HWID واسم التول عشان يتم تفعيله
+                        </p>
+                    </div>
+
+                    <form id="hwidForm" onsubmit="handleHwidSubmit(event)" class="space-y-4">
+                        <div>
+                            <label for="hwidInput" id="labelHwidCode"
+                                class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+                                HWID <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="hwidInput" required dir="ltr"
+                                placeholder="XXXX-XXXX-XXXX-XXXX"
+                                class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 font-mono" />
+                        </div>
+
+                        <div>
+                            <label for="hwidToolInput" id="labelHwidTool"
+                                class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+                                اسم التول <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="hwidToolInput" required placeholder="اكتب اسم التول..."
+                                class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600" />
+                        </div>
+
+                        <div id="hwidAlertBox" class="hidden rounded-xl p-3.5 text-xs font-semibold"></div>
+
+                        <button type="submit" id="hwidSubmitBtn"
+                            class="btn-crimson w-full py-3.5 px-6 rounded-xl text-white font-extrabold text-sm cursor-pointer">
+                            إرسال طلب التفعيل
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Logged-in User's Submitted HWIDs -->
+                <div id="myHwidsSection" class="hidden glass-card rounded-3xl p-5 sm:p-6 space-y-3">
+                    <h3 id="myHwidsTitle" class="text-sm font-extrabold text-white">طلبات التفعيل الخاصة بك</h3>
+                    <div id="myHwidsList" class="space-y-2.5"></div>
+                </div>
+            </section>
+
+            <!-- 5) Vortex Keys Page (كيهات فورتكس - Logged-in Workers Only) -->
+            <section id="vortexView" class="hidden space-y-5 max-w-xl mx-auto">
+                <div class="glass-card rounded-3xl p-6 sm:p-10 text-center space-y-6">
+                    <div>
+                        <div
+                            class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/25 text-red-500 mb-4 shadow-inner">
+                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <h2 id="vortexHeading" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">كيهات فورتكس</h2>
+                        <p id="vortexSubheading" class="text-zinc-400 text-sm mt-2">
+                            اطلب كيي فورتكس وسيتم تسليمك كيي متاح تلقائياً
+                        </p>
+                    </div>
+
+                    <!-- Live Stock Pill -->
+                    <div class="flex justify-center">
+                        <div id="vortexStockBadge"
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-zinc-900 border border-white/10 text-zinc-300">
+                            جاري التحقق من التوفر...
+                        </div>
+                    </div>
+
+                    <div id="vortexAlertBox" class="hidden rounded-xl p-3.5 text-xs font-semibold"></div>
+
+                    <button type="button" id="vortexClaimBtn" onclick="claimVortexKey()"
+                        class="btn-crimson w-full py-3.5 px-6 rounded-xl text-white font-extrabold text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        طلب كيي فورتكس
+                    </button>
+
+                    <!-- Newly Claimed Key Result -->
+                    <div id="vortexLatestCard" class="hidden bg-black/70 border border-emerald-500/40 rounded-2xl p-4 space-y-3 text-start">
+                        <div class="flex items-center justify-between text-xs">
+                            <span id="vortexLatestLabel" class="font-bold text-emerald-400">تم تسليمك هذا الكيي:</span>
+                            <button type="button" id="vortexCopyLatestBtn" onclick="copyVortexKeyText(latestVortexKey, this)"
+                                class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">
+                                نسخ الكيي
+                            </button>
+                        </div>
+                        <code id="vortexLatestCode" dir="ltr"
+                            class="block w-full bg-black/80 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm font-mono font-bold text-white break-all select-all"></code>
+                    </div>
+                </div>
+
+                <!-- Worker's Claimed Vortex Keys History -->
+                <div id="myVortexCard" class="hidden glass-card rounded-3xl p-5 sm:p-6 space-y-3">
+                    <h3 id="myVortexTitle" class="text-sm font-extrabold text-white">الكيهات التي استلمتها</h3>
+                    <div id="myVortexList" class="space-y-2.5"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Admin-Only Dashboard Page -->
+    <section id="adminDashboardView" class="hidden flex-1 px-4 py-8 sm:py-12">
+        <div class="max-w-5xl mx-auto w-full space-y-6 animate-enter">
+            <!-- Admin Page Header -->
+            <div class="glass-card rounded-3xl p-5 sm:p-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-white">لوحة تحكم الأدمن</h2>
+                    </div>
+                    <p class="text-xs text-zinc-400 mt-1">إدارة بيانات التسليمات، طلبات تفعيل HWID، كيهات فورتكس، وإعدادات البوت</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" id="adminTabDataBtn" onclick="switchAdminTab('data')"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-red-600 text-white transition cursor-pointer flex items-center gap-1.5">
+                        <span>البيانات</span>
+                        <span id="adminCountBadge"
+                            class="text-[11px] font-mono px-1.5 py-0.2 rounded-full bg-black/30 text-white">0</span>
+                    </button>
+                    <button type="button" id="adminTabHwidBtn" onclick="switchAdminTab('hwid')"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10 transition cursor-pointer flex items-center gap-1.5">
+                        <span>تفعيل</span>
+                        <span id="adminPendingHwidBadge"
+                            class="text-[11px] font-mono px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300">0</span>
+                    </button>
+                    <button type="button" id="adminTabVortexBtn" onclick="switchAdminTab('vortex')"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10 transition cursor-pointer flex items-center gap-1.5">
+                        <span>كيهات فورتكس</span>
+                        <span id="adminVortexAvailBadge"
+                            class="text-[11px] font-mono px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300">0</span>
+                    </button>
+                    <button type="button" id="adminTabUsersBtn" onclick="switchAdminTab('users')"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10 transition cursor-pointer flex items-center gap-1.5">
+                        <span>المستخدمين</span>
+                        <span id="adminUsersCountBadge"
+                            class="text-[11px] font-mono px-1.5 py-0.2 rounded-full bg-white/15 text-white">0</span>
+                    </button>
+                    <button type="button" id="adminTabSettingsBtn" onclick="switchAdminTab('settings')"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10 transition cursor-pointer">
+                        إعدادات البوت
+                    </button>
+                    <button type="button" onclick="exitAdminPage()"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-200 border border-white/10 transition cursor-pointer">
+                        العودة للموقع
+                    </button>
+                    <button type="button" onclick="lockAdminSession()"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-red-950/60 hover:bg-red-900/70 text-red-300 border border-red-500/30 transition cursor-pointer">
+                        قفل
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Tab 1: Submissions Data -->
+            <div id="adminDataTab" class="space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-zinc-400 font-semibold">إجمالي التسليمات</div>
+                        <div id="kpiTotalReports" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-emerald-400 font-mono uppercase tracking-wider">TOTAL VALID</div>
+                        <div id="kpiTotalValid" class="text-2xl font-extrabold font-mono text-emerald-400 mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-amber-300 font-mono uppercase tracking-wider">TOTAL MAIL LOCKED</div>
+                        <div id="kpiTotalMailLocked" class="text-2xl font-extrabold font-mono text-amber-300 mt-1">0</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <input type="text" id="adminSearchInput" oninput="renderAdminReports()"
+                        placeholder="ابحث بالاسم أو رقم الكاش أو اسم التول أو الملف..."
+                        class="cyber-input flex-1 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500" />
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="loadAdminData()"
+                            class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-white transition cursor-pointer">
+                            تحديث
+                        </button>
+                        <button type="button" onclick="exportReportsCsv()"
+                            class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-white transition cursor-pointer">
+                            تصدير CSV
+                        </button>
+                        <button type="button" id="clearAllBtn" onclick="clearAllReports()"
+                            class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-red-950/60 hover:bg-red-900/70 text-red-300 border border-red-500/30 transition cursor-pointer">
+                            مسح الكل
+                        </button>
+                    </div>
+                </div>
+
+                <div id="adminReportsList" class="space-y-4"></div>
+            </div>
+
+            <!-- Admin Tab 2: HWID Activation (تفعيل - Separate Page Inside Admin) -->
+            <div id="adminHwidTab" class="hidden space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-zinc-400 font-semibold">إجمالي طلبات التفعيل</div>
+                        <div id="kpiHwidTotal" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-amber-300 font-semibold">بانتظار التفعيل</div>
+                        <div id="kpiHwidPending" class="text-2xl font-extrabold font-mono text-amber-300 mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-emerald-400 font-semibold">مُفعّلة</div>
+                        <div id="kpiHwidActive" class="text-2xl font-extrabold font-mono text-emerald-400 mt-1">0</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <input type="text" id="adminHwidSearch" oninput="renderAdminHwids()"
+                        placeholder="ابحث بـ HWID أو الاسم أو اسم المستخدم..."
+                        class="cyber-input flex-1 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500" />
+                    <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="setAdminHwidFilter('all')" id="hwidFilterAll"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-red-600 text-white cursor-pointer">الكل</button>
+                        <button type="button" onclick="setAdminHwidFilter('pending')" id="hwidFilterPending"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">انتظار</button>
+                        <button type="button" onclick="setAdminHwidFilter('active')" id="hwidFilterActive"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">مفعل</button>
+                        <button type="button" onclick="setAdminHwidFilter('rejected')" id="hwidFilterRejected"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">مرفوض</button>
+                        <button type="button" onclick="loadAdminHwids()"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-white cursor-pointer">تحديث</button>
+                    </div>
+                </div>
+
+                <div id="adminHwidsList" class="space-y-3"></div>
+            </div>
+
+            <!-- Admin Tab 3: Vortex Keys Management -->
+            <div id="adminVortexTab" class="hidden space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-emerald-400 font-semibold">المتاح الآن</div>
+                        <div id="kpiVortexAvail" class="text-2xl font-extrabold font-mono text-emerald-400 mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-amber-300 font-semibold">تم سحبه</div>
+                        <div id="kpiVortexClaimed" class="text-2xl font-extrabold font-mono text-amber-300 mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-zinc-400 font-semibold">إجمالي الكيهات</div>
+                        <div id="kpiVortexTotal" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                    </div>
+                </div>
+
+                <!-- Bulk Add Vortex Keys -->
+                <div class="glass-card rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <label for="adminVortexInput" class="text-xs font-bold text-zinc-200">إضافة كيهات فورتكس (كل كيي في سطر)</label>
+                        <span class="text-[11px] text-zinc-500">يدعم الإضافة الجماعية (مثلاً 30 كيي مرة واحدة)</span>
+                    </div>
+                    <textarea id="adminVortexInput" rows="5" dir="ltr"
+                        placeholder="VORTEX-KEY-1&#10;VORTEX-KEY-2&#10;VORTEX-KEY-3"
+                        class="cyber-input w-full rounded-xl px-4 py-3 text-xs text-white font-mono placeholder-zinc-600"></textarea>
+                    <div id="adminVortexAddStatus" class="hidden rounded-xl p-3 text-xs font-semibold"></div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="addAdminVortexKeys()"
+                            class="btn-crimson px-5 py-2.5 rounded-xl text-white font-bold text-xs cursor-pointer">
+                            إضافة الكيهات
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <input type="text" id="adminVortexSearch" oninput="renderAdminVortexKeys()"
+                        placeholder="ابحث بالكيي أو اسم العامل..."
+                        class="cyber-input flex-1 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500" />
+                    <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="setAdminVortexFilter('all')" id="vortexFilterAll"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-red-600 text-white cursor-pointer">الكل</button>
+                        <button type="button" onclick="setAdminVortexFilter('available')" id="vortexFilterAvailable"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">متاح</button>
+                        <button type="button" onclick="setAdminVortexFilter('claimed')" id="vortexFilterClaimed"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">تم سحبه</button>
+                        <button type="button" onclick="loadAdminVortexKeys()"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-white cursor-pointer">تحديث</button>
+                        <button type="button" id="clearVortexBtn" onclick="clearAdminVortexKeys()"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-red-950/60 hover:bg-red-900/70 text-red-300 border border-red-500/30 cursor-pointer">مسح الكل</button>
+                    </div>
+                </div>
+
+                <div id="adminVortexList" class="space-y-2.5"></div>
+            </div>
+
+            <!-- Admin Tab 4: Registered Users & Activity -->
+            <div id="adminUsersTab" class="hidden space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-zinc-400 font-semibold">إجمالي الحسابات</div>
+                        <div id="kpiUsersTotal" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-emerald-400 font-semibold">مسجّلين دخول نشطين</div>
+                        <div id="kpiUsersActive" class="text-2xl font-extrabold font-mono text-emerald-400 mt-1">0</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 sm:p-5">
+                        <div class="text-xs text-zinc-300 font-semibold">إجمالي الملفات المسلمة</div>
+                        <div id="kpiUsersTotalFiles" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl px-4 py-3 text-xs text-zinc-400 bg-black/50 border border-white/10">
+                    لأمان الحسابات، كلمات المرور مشفرة بتشفير أحادي الاتجاه (<code class="text-red-400">scrypt</code>) ولا يمكن عرض كلمة المرور الأصلية — يمكنك تعيين كلمة مرور جديدة لأي مستخدم فوراً عبر زر «تغيير كلمة المرور».
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <input type="text" id="adminUsersSearch" oninput="renderAdminUsers()"
+                        placeholder="ابحث بالاسم أو اسم المستخدم (@username)..."
+                        class="cyber-input flex-1 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500" />
+                    <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="setAdminUsersFilter('all')" id="usersFilterAll"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-red-600 text-white cursor-pointer">الكل</button>
+                        <button type="button" onclick="setAdminUsersFilter('online')" id="usersFilterOnline"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">نشط الآن</button>
+                        <button type="button" onclick="setAdminUsersFilter('submitted')" id="usersFilterSubmitted"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 text-zinc-300 cursor-pointer">سلم ملفات</button>
+                        <button type="button" onclick="loadAdminUsers()"
+                            class="px-3 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-white cursor-pointer">تحديث</button>
+                    </div>
+                </div>
+
+                <div id="adminUsersList" class="space-y-3"></div>
+            </div>
+
+            <!-- Admin Tab 5: Bot Settings -->
+            <div id="adminSettingsTab" class="hidden">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-xl mx-auto space-y-4">
+                    <h3 class="text-base font-extrabold text-white pb-3 border-b border-white/10">إعدادات بوت تيليجرام</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-400 mb-1.5">Telegram Bot Token</label>
+                        <input type="text" id="cfgBotToken"
+                            class="cyber-input w-full rounded-xl px-3.5 py-2.5 text-xs text-white font-mono" dir="ltr" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-400 mb-1.5">Telegram Chat ID</label>
+                        <input type="text" id="cfgChatId"
+                            class="cyber-input w-full rounded-xl px-3.5 py-2.5 text-xs text-white font-mono" dir="ltr" />
+                    </div>
+                    <div class="flex flex-wrap gap-2.5 pt-2">
+                        <button type="button" onclick="saveAdminConfig()"
+                            class="btn-crimson flex-1 py-2.5 px-4 rounded-xl text-white font-bold text-xs cursor-pointer">حفظ
+                            التعديلات</button>
+                        <button type="button" onclick="testTelegramBot()" id="testBotBtn"
+                            class="bg-white/10 hover:bg-white/15 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition cursor-pointer">اختبار
+                            إرسال للبوت</button>
+                    </div>
+                    <div id="adminStatusMsg" class="hidden text-xs font-semibold p-3 rounded-xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Minimal Footer -->
+    <footer class="py-5 text-center text-xs text-zinc-600 border-t border-white/[0.04]">
+        <span id="footerText">h token • .TXT فقط</span>
+    </footer>
+
+    <!-- Admin Password Modal -->
+    <div id="adminModal"
+        class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    <span id="adminModalTitle">دخول الأدمن</span>
+                </h3>
+                <button onclick="closeAdminModal()"
+                    class="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="adminLockScreen" class="py-6 space-y-4">
+                <p class="text-xs text-zinc-400">أدخل كلمة مرور المدير للوصول لصفحة الأدمن والبيانات والتفعيل</p>
+                <input type="password" id="adminPassInput" placeholder="••••••••"
+                    oninput="hideAdminError()"
+                    onkeydown="if(event.key==='Enter')unlockAdmin()"
+                    class="cyber-input w-full rounded-xl px-4 py-3 text-sm text-white" />
+                <div id="adminPassError" role="alert"
+                    class="hidden rounded-xl p-3 text-xs font-semibold flex items-center gap-2 bg-red-950/70 border border-red-500/40 text-red-300">
+                    <svg class="w-4 h-4 shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v2m0 4h.01M10.29 3.86l-7.4 12.84A1.5 1.5 0 004.19 19h15.62a1.5 1.5 0 001.3-2.3l-7.4-12.84a1.5 1.5 0 00-2.6 0z" />
+                    </svg>
+                    <span id="adminPassErrorText">كلمة المرور غير صحيحة</span>
+                </div>
+                <button onclick="unlockAdmin()"
+                    class="btn-crimson w-full py-3 rounded-xl text-white font-bold text-sm cursor-pointer">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+        const MAX_IMG_SIZE_BYTES = 10 * 1024 * 1024;
+        const MAX_STORED_TXT_CHARS = 50000;
+        const USER_TOKEN_KEY = 'fast_tokens_user_token';
+        const ADMIN_TOKEN_KEY = 'fast_tokens_admin_token';
+
+        let currentLang = 'ar';
+        let currentPublicPage = 'submit';
+        let pendingPageAfterAuth = 'submit';
+        let currentUser = null;
+        let userToken = localStorage.getItem(USER_TOKEN_KEY) || '';
+        let adminToken = sessionStorage.getItem(ADMIN_TOKEN_KEY) || '';
+
+        let selectedFile = null;
+        let selectedFileText = '';
+        let selectedFileTextTruncated = false;
+        let selectedImage = null;
+        let checkImgUrl = null;
+        let isScanningImg = false;
+        let currentImgScanId = 0;
+        let ocrWorkerPromise = null;
+        let extractedStats = { valid: null, mailLocked: null };
+
+        let mySubmissionsCache = [];
+        let myVortexKeysCache = [];
+        let latestVortexKey = '';
+        let adminSubmissionsCache = [];
+        let adminHwidsCache = [];
+        let adminVortexCache = [];
+        let adminUsersCache = [];
+        let adminHwidFilter = 'all';
+        let adminVortexFilter = 'all';
+        let adminUsersFilter = 'all';
+        let clearAllPending = false;
+        let clearVortexPending = false;
+
+        const i18n = {
+            ar: {
+                brandTitle: 'h token',
+                langBtn: 'EN',
+                navSubmit: 'تسليم',
+                navHistory: 'تسليماتي',
+                navActivation: 'تفعيل',
+                navVortex: 'كيهات فورتكس',
+                headerLogin: 'تسجيل دخول',
+                logoutBtn: 'خروج',
+                authHeading: 'حسابك في h token',
+                authSubheading: 'سجّل مرة واحدة عشان اسمك يتحفظ وتابع تسليماتك بسهولة',
+                authTabLogin: 'تسجيل الدخول',
+                authTabRegister: 'إنشاء حساب',
+                labelLoginUser: 'اسم المستخدم',
+                labelLoginPass: 'كلمة المرور',
+                loginSubmitBtn: 'دخول',
+                labelRegName: 'الاسم (الذي سيظهر في التسليمات) <span class="text-red-500">*</span>',
+                placeholderName: 'اسمك',
+                labelRegUser: 'اسم المستخدم (بالإنجليزي) <span class="text-red-500">*</span>',
+                labelRegPass: 'كلمة المرور <span class="text-red-500">*</span>',
+                regSubmitBtn: 'إنشاء الحساب والدخول',
+                authActivationHint: 'تحتاج تفعيل أداة؟ انتقل إلى صفحة التفعيل',
+                formHeading: 'تسليم',
+                formSubheading: 'دخل رقم الكاش واسم التول والملف txt',
+                accountLabelPrefix: 'الاسم:',
+                labelCash: 'رقم الكاش <span class="text-red-500">*</span>',
+                placeholderCash: '010XXXXXXXX',
+                labelTool: 'اسم التول <span class="text-red-500">*</span>',
+                placeholderTool: 'اكتب اسم التول...',
+                labelNotes: 'ملاحظات <span class="text-zinc-500 font-normal">(اختياري)</span>',
+                placeholderNotes: 'أي تفاصيل إضافية...',
+                labelFile: 'الملف <span class="text-red-500">*</span>',
+                maxSizeBadge: 'TXT • حد أقصى 5 MB',
+                dropMainText: 'اضغط لاختيار الملف أو اسحبه هنا',
+                dropSubText: 'يُسمح بملفات <span class="text-red-400 font-mono font-bold">.txt</span> فقط',
+                previewLabel: 'معاينة المحتوى',
+                labelCheckImg: 'صورة الفحص <span class="text-zinc-500 font-normal">(اختياري)</span>',
+                imgHintBadge: 'صورة • استخراج تلقائي',
+                imgMainText: 'اضغط لرفع صورة الفحص أو اسحبها / الصقها هنا',
+                imgSubText: 'اختياري — يتم أخذ <span class="text-emerald-400 font-mono font-bold">VALID</span> و <span class="text-amber-300 font-mono font-bold">MAIL LOCKED</span> فقط',
+                imgScanning: 'جاري قراءة صورة الفحص واستخراج Valid و Mail Locked...',
+                imgScanDone: 'تم استخراج الأرقام بنجاح من صورة الفحص.',
+                imgScanPartial: 'تعذر قراءة أحد الأرقام تلقائياً — يمكنك إدخاله يدوياً بالأسفل أو مسح الصورة.',
+                submitBtn: 'إرسال',
+                sendingBtn: 'جاري الإرسال...',
+                successTitle: 'تم الإرسال بنجاح!',
+                successDesc: 'تم استلام ملفك وبياناتك بنجاح.',
+                sendAnotherBtn: 'إرسال ملف آخر',
+                viewMyHistoryBtn: 'عرض تسليماتي',
+                myHistoryTitle: 'سجل تسليماتي',
+                myHistorySubtitle: 'إجمالي الملفات التي سلمتها وتواريخها',
+                myHistoryNewBtn: 'تسليم ملف جديد',
+                myStatFilesLabel: 'عدد الملفات المسلمة',
+                actHeading: 'تفعيل',
+                actSubheading: 'حط كود الـ HWID واسم التول عشان يتم تفعيله',
+                labelHwidTool: 'اسم التول <span class="text-red-500">*</span>',
+                hwidSubmitBtn: 'إرسال طلب التفعيل',
+                myHwidsTitle: 'طلبات التفعيل الخاصة بك',
+                vortexHeading: 'كيهات فورتكس',
+                vortexSubheading: 'اطلب كيي فورتكس وسيتم تسليمك كيي متاح تلقائياً',
+                vortexClaimBtn: 'طلب كيي فورتكس',
+                vortexClaimingBtn: 'جاري السحب...',
+                vortexLatestLabel: 'تم تسليمك هذا الكيي:',
+                vortexCopyBtn: 'نسخ الكيي',
+                myVortexTitle: 'الكيهات التي استلمتها',
+                vortexUnavailable: 'غير متوفر الآن',
+                footerText: 'h token • .TXT فقط',
+                errNotTxt: 'خطأ: يُسمح برفع ملفات بصيغة .txt فقط!',
+                errTooBig: 'خطأ: حجم الملف يتجاوز الحد الأقصى (5 ميجابايت)!',
+                errNotImg: 'خطأ: يرجى اختيار ملف صورة صالح لصورة الفحص!',
+                errImgTooBig: 'خطأ: حجم صورة الفحص يتجاوز الحد الأقصى (10 ميجابايت)!',
+                errImgScanning: 'انتظر لحظة حتى تنتهي قراءة صورة الفحص...',
+                errImgStatsMissing: 'يرجى إدخال رقمي VALID و MAIL LOCKED أو مسح الصورة.',
+                errMissing: 'يرجى إدخال رقم الكاش واسم التول واختيار ملف .txt.',
+                errAdminPass: 'كلمة المرور غير صحيحة، حاول مرة أخرى.',
+                errSendFail: 'حدث خطأ أثناء الإرسال. تأكد من الاتصال بالإنترنت.'
+            },
+            en: {
+                brandTitle: 'h token',
+                langBtn: 'عربي',
+                navSubmit: 'Submit',
+                navHistory: 'My Files',
+                navActivation: 'Activation',
+                navVortex: 'Vortex Keys',
+                headerLogin: 'Sign In',
+                logoutBtn: 'Logout',
+                authHeading: 'h token Account',
+                authSubheading: 'Sign in once so your name is saved and track your submissions',
+                authTabLogin: 'Sign In',
+                authTabRegister: 'Create Account',
+                labelLoginUser: 'Username',
+                labelLoginPass: 'Password',
+                loginSubmitBtn: 'Sign In',
+                labelRegName: 'Display Name <span class="text-red-500">*</span>',
+                placeholderName: 'Your name',
+                labelRegUser: 'Username (English) <span class="text-red-500">*</span>',
+                labelRegPass: 'Password <span class="text-red-500">*</span>',
+                regSubmitBtn: 'Create Account',
+                authActivationHint: 'Need tool activation? Go to Activation page',
+                formHeading: 'Submit',
+                formSubheading: 'Enter Cash Number, Tool Name, and .txt file',
+                accountLabelPrefix: 'Account:',
+                labelCash: 'Cash Number <span class="text-red-500">*</span>',
+                placeholderCash: '010XXXXXXXX',
+                labelTool: 'Tool Name <span class="text-red-500">*</span>',
+                placeholderTool: 'Enter tool name...',
+                labelNotes: 'Notes <span class="text-zinc-500 font-normal">(Optional)</span>',
+                placeholderNotes: 'Any extra details...',
+                labelFile: 'File <span class="text-red-500">*</span>',
+                maxSizeBadge: 'TXT • Max 5 MB',
+                dropMainText: 'Click to select file or drag & drop here',
+                dropSubText: 'Only <span class="text-red-400 font-mono font-bold">.txt</span> files are allowed',
+                previewLabel: 'Content Preview',
+                labelCheckImg: 'Check Screenshot <span class="text-zinc-500 font-normal">(Optional)</span>',
+                imgHintBadge: 'Image • Auto Extract',
+                imgMainText: 'Click, drag & drop, or paste check screenshot',
+                imgSubText: 'Optional — extracts only <span class="text-emerald-400 font-mono font-bold">VALID</span> & <span class="text-amber-300 font-mono font-bold">MAIL LOCKED</span>',
+                imgScanning: 'Scanning check image for Valid & Mail Locked...',
+                imgScanDone: 'Extracted Valid & Mail Locked counts successfully.',
+                imgScanPartial: 'Could not auto-read all numbers — fill them below or clear image.',
+                submitBtn: 'Send',
+                sendingBtn: 'Sending...',
+                successTitle: 'Sent Successfully!',
+                successDesc: 'Your file and details have been delivered.',
+                sendAnotherBtn: 'Send Another File',
+                viewMyHistoryBtn: 'View My Files',
+                myHistoryTitle: 'My Submissions',
+                myHistorySubtitle: 'Total files you submitted and their timestamps',
+                myHistoryNewBtn: 'Submit New File',
+                myStatFilesLabel: 'Total Files Submitted',
+                actHeading: 'Activation',
+                actSubheading: 'Enter your HWID and tool name to request activation',
+                labelHwidTool: 'Tool Name <span class="text-red-500">*</span>',
+                hwidSubmitBtn: 'Send Activation Request',
+                myHwidsTitle: 'Your Activation Requests',
+                vortexHeading: 'Vortex Keys',
+                vortexSubheading: 'Request a Vortex key and receive one automatically if available',
+                vortexClaimBtn: 'Request Vortex Key',
+                vortexClaimingBtn: 'Requesting...',
+                vortexLatestLabel: 'Assigned Key:',
+                vortexCopyBtn: 'Copy Key',
+                myVortexTitle: 'Keys You Claimed',
+                vortexUnavailable: 'Not available right now',
+                footerText: 'h token • .TXT Only',
+                errNotTxt: 'Error: Only .txt files are allowed!',
+                errTooBig: 'Error: File size exceeds the 5 MB limit!',
+                errNotImg: 'Error: Please select a valid image file for Check Screenshot!',
+                errImgTooBig: 'Error: Check image exceeds the 10 MB limit!',
+                errImgScanning: 'Please wait until check image scanning completes...',
+                errImgStatsMissing: 'Please enter VALID & MAIL LOCKED counts or clear the image.',
+                errMissing: 'Please enter cash number, tool name, and select a .txt file.',
+                errAdminPass: 'Incorrect password, please try again.',
+                errSendFail: 'Failed to send. Please check your internet connection.'
+            }
+        };
+
+        async function apiFetch(url, options = {}, token = '') {
+            const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+            if (token) headers.Authorization = `Bearer ${token}`;
+            const res = await fetch(url, { ...options, headers });
+            let data = {};
+            try { data = await res.json(); } catch {}
+            if (!res.ok) {
+                const err = new Error(data.error || `HTTP ${res.status}`);
+                err.status = res.status;
+                throw err;
+            }
+            return data;
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function updateDynamicDate() {
+            const now = new Date();
+            const locale = currentLang === 'ar' ? 'ar-EG' : 'en-US';
+            const formatted = now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+            document.getElementById('liveDateText').textContent = formatted;
+        }
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            const t = i18n[lang];
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+            document.getElementById('brandTitle').textContent = t.brandTitle;
+            document.getElementById('langBtnText').textContent = t.langBtn;
+            document.getElementById('navSubmitBtn').textContent = t.navSubmit;
+            document.getElementById('navHistoryLabel').textContent = t.navHistory;
+            document.getElementById('navActivationBtn').textContent = t.navActivation;
+            document.getElementById('navVortexBtn').textContent = t.navVortex;
+            document.getElementById('headerLoginBtn').textContent = t.headerLogin;
+            document.getElementById('logoutBtnText').textContent = t.logoutBtn;
+
+            document.getElementById('authHeading').textContent = t.authHeading;
+            document.getElementById('authSubheading').textContent = t.authSubheading;
+            document.getElementById('authTabLogin').textContent = t.authTabLogin;
+            document.getElementById('authTabRegister').textContent = t.authTabRegister;
+            document.getElementById('labelLoginUser').textContent = t.labelLoginUser;
+            document.getElementById('labelLoginPass').textContent = t.labelLoginPass;
+            document.getElementById('loginSubmitBtn').textContent = t.loginSubmitBtn;
+            document.getElementById('labelRegName').innerHTML = t.labelRegName;
+            document.getElementById('regName').placeholder = t.placeholderName;
+            document.getElementById('labelRegUser').innerHTML = t.labelRegUser;
+            document.getElementById('labelRegPass').innerHTML = t.labelRegPass;
+            document.getElementById('regSubmitBtn').textContent = t.regSubmitBtn;
+            document.getElementById('authActivationHint').textContent = t.authActivationHint;
+
+            document.getElementById('formHeading').textContent = t.formHeading;
+            document.getElementById('formSubheading').textContent = t.formSubheading;
+            document.getElementById('accountLabelPrefix').textContent = t.accountLabelPrefix;
+            document.getElementById('labelCash').innerHTML = t.labelCash;
+            document.getElementById('cashNumber').placeholder = t.placeholderCash;
+            document.getElementById('labelTool').innerHTML = t.labelTool;
+            document.getElementById('toolName').placeholder = t.placeholderTool;
+            document.getElementById('labelNotes').innerHTML = t.labelNotes;
+            document.getElementById('empNotes').placeholder = t.placeholderNotes;
+            document.getElementById('labelFile').innerHTML = t.labelFile;
+            document.getElementById('maxSizeBadge').textContent = t.maxSizeBadge;
+            document.getElementById('dropMainText').textContent = t.dropMainText;
+            document.getElementById('dropSubText').innerHTML = t.dropSubText;
+            document.getElementById('previewLabel').textContent = t.previewLabel;
+            document.getElementById('labelCheckImg').innerHTML = t.labelCheckImg;
+            document.getElementById('imgHintBadge').textContent = t.imgHintBadge;
+            document.getElementById('imgMainText').textContent = t.imgMainText;
+            document.getElementById('imgSubText').innerHTML = t.imgSubText;
+            document.getElementById('submitBtnText').textContent = t.submitBtn;
+            document.getElementById('successTitle').textContent = t.successTitle;
+            document.getElementById('successDesc').textContent = t.successDesc;
+            document.getElementById('sendAnotherBtn').textContent = t.sendAnotherBtn;
+            document.getElementById('viewMyHistoryBtn').textContent = t.viewMyHistoryBtn;
+
+            document.getElementById('myHistoryTitle').textContent = t.myHistoryTitle;
+            document.getElementById('myHistorySubtitle').textContent = t.myHistorySubtitle;
+            document.getElementById('myHistoryNewBtn').textContent = t.myHistoryNewBtn;
+            document.getElementById('myStatFilesLabel').textContent = t.myStatFilesLabel;
+
+            document.getElementById('actHeading').textContent = t.actHeading;
+            document.getElementById('actSubheading').textContent = t.actSubheading;
+            document.getElementById('labelHwidTool').innerHTML = t.labelHwidTool;
+            document.getElementById('hwidToolInput').placeholder = t.placeholderTool;
+            document.getElementById('hwidSubmitBtn').textContent = t.hwidSubmitBtn;
+            document.getElementById('myHwidsTitle').textContent = t.myHwidsTitle;
+
+            document.getElementById('vortexHeading').textContent = t.vortexHeading;
+            document.getElementById('vortexSubheading').textContent = t.vortexSubheading;
+            document.getElementById('vortexClaimBtn').textContent = t.vortexClaimBtn;
+            document.getElementById('vortexLatestLabel').textContent = t.vortexLatestLabel;
+            document.getElementById('vortexCopyLatestBtn').textContent = t.vortexCopyBtn;
+            document.getElementById('myVortexTitle').textContent = t.myVortexTitle;
+
+            document.getElementById('footerText').textContent = t.footerText;
+            updateDynamicDate();
+        }
+
+        function toggleLanguage() {
+            applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+        }
+
+        // --- Navigation & Auth UI ---
+        function updateAuthHeader() {
+            const chip = document.getElementById('userChip');
+            const loginBtn = document.getElementById('headerLoginBtn');
+            const histBtn = document.getElementById('navHistoryBtn');
+            const vortexBtn = document.getElementById('navVortexBtn');
+
+            if (currentUser) {
+                document.getElementById('headerUserName').textContent = currentUser.name;
+                document.getElementById('submitAccountName').textContent = currentUser.name;
+                chip.classList.remove('hidden');
+                chip.classList.add('flex');
+                loginBtn.classList.add('hidden');
+                histBtn.classList.remove('hidden');
+                vortexBtn.classList.remove('hidden');
+            } else {
+                chip.classList.add('hidden');
+                chip.classList.remove('flex');
+                loginBtn.classList.remove('hidden');
+                histBtn.classList.add('hidden');
+                vortexBtn.classList.add('hidden');
+            }
+        }
+
+        function updatePublicNavButtons() {
+            const active = 'bg-red-600 text-white';
+            const idle = 'text-zinc-300 hover:text-white hover:bg-white/[0.06]';
+            const setBtn = (id, isAct) => {
+                const el = document.getElementById(id);
+                el.className = `px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${isAct ? active : idle}`;
+            };
+            setBtn('navSubmitBtn', currentPublicPage === 'submit' || (currentPublicPage === 'auth' && pendingPageAfterAuth === 'submit'));
+            const histEl = document.getElementById('navHistoryBtn');
+            histEl.className = `${currentUser ? 'flex' : 'hidden'} px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer items-center gap-1.5 ${currentPublicPage === 'history' ? active : idle}`;
+            setBtn('navActivationBtn', currentPublicPage === 'activation' || (currentPublicPage === 'auth' && pendingPageAfterAuth === 'activation'));
+            const vortexEl = document.getElementById('navVortexBtn');
+            vortexEl.className = `${currentUser ? 'inline-block' : 'hidden'} px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${currentPublicPage === 'vortex' ? active : idle}`;
+        }
+
+        function switchPublicPage(page) {
+            if ((page === 'submit' || page === 'history' || page === 'activation' || page === 'vortex') && !currentUser) {
+                pendingPageAfterAuth = page;
+                page = 'auth';
+            } else if (page !== 'auth') {
+                pendingPageAfterAuth = page;
+            }
+            currentPublicPage = page;
+
+            document.getElementById('authView').classList.toggle('hidden', page !== 'auth');
+            document.getElementById('submitView').classList.toggle('hidden', page !== 'submit');
+            document.getElementById('myHistoryView').classList.toggle('hidden', page !== 'history');
+            document.getElementById('activationView').classList.toggle('hidden', page !== 'activation');
+            document.getElementById('vortexView').classList.toggle('hidden', page !== 'vortex');
+            updatePublicNavButtons();
+
+            if (page === 'history' && currentUser) {
+                loadMySubmissions();
+            } else if (page === 'activation' && currentUser) {
+                loadMyHwids();
+            } else if (page === 'vortex' && currentUser) {
+                loadVortexStatus();
+            }
+        }
+
+        function switchAuthTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
+            document.getElementById('registerForm').classList.toggle('hidden', isLogin);
+            document.getElementById('authTabLogin').className =
+                `py-2 rounded-lg text-xs font-bold transition cursor-pointer ${isLogin ? 'bg-red-600 text-white' : 'text-zinc-400 hover:text-white'}`;
+            document.getElementById('authTabRegister').className =
+                `py-2 rounded-lg text-xs font-bold transition cursor-pointer ${!isLogin ? 'bg-red-600 text-white' : 'text-zinc-400 hover:text-white'}`;
+            hideAuthAlert();
+        }
+
+        function showAuthAlert(msg) {
+            const box = document.getElementById('authAlertBox');
+            box.textContent = msg;
+            box.classList.remove('hidden');
+        }
+
+        function hideAuthAlert() {
+            document.getElementById('authAlertBox').classList.add('hidden');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideAuthAlert();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            try {
+                const res = await apiFetch('/api/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+                userToken = res.token;
+                localStorage.setItem(USER_TOKEN_KEY, userToken);
+                currentUser = res.user;
+                document.getElementById('loginForm').reset();
+                updateAuthHeader();
+                await loadMySubmissions();
+                switchPublicPage(pendingPageAfterAuth || 'submit');
+            } catch (err) {
+                showAuthAlert(err.message);
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideAuthAlert();
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            try {
+                const res = await apiFetch('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, username, password })
+                });
+                userToken = res.token;
+                localStorage.setItem(USER_TOKEN_KEY, userToken);
+                currentUser = res.user;
+                document.getElementById('registerForm').reset();
+                updateAuthHeader();
+                await loadMySubmissions();
+                switchPublicPage(pendingPageAfterAuth || 'submit');
+            } catch (err) {
+                showAuthAlert(err.message);
+            }
+        }
+
+        async function logoutUser() {
+            if (userToken) {
+                apiFetch('/api/auth/logout', { method: 'POST' }, userToken).catch(() => {});
+            }
+            userToken = '';
+            currentUser = null;
+            mySubmissionsCache = [];
+            myVortexKeysCache = [];
+            latestVortexKey = '';
+            localStorage.removeItem(USER_TOKEN_KEY);
+            updateAuthHeader();
+            document.getElementById('navHistoryCount').textContent = '0';
+            document.getElementById('myHwidsSection').classList.add('hidden');
+            document.getElementById('vortexLatestCard').classList.add('hidden');
+            document.getElementById('myVortexCard').classList.add('hidden');
+            switchPublicPage('auth');
+        }
+
+        async function restoreUserSession() {
+            if (!userToken) {
+                updateAuthHeader();
+                switchPublicPage('auth');
+                return;
+            }
+            try {
+                const res = await apiFetch('/api/auth/me', {}, userToken);
+                currentUser = res.user;
+                updateAuthHeader();
+                await loadMySubmissions();
+                switchPublicPage('submit');
+            } catch {
+                userToken = '';
+                currentUser = null;
+                localStorage.removeItem(USER_TOKEN_KEY);
+                updateAuthHeader();
+                switchPublicPage('auth');
+            }
+        }
+
+        // --- Drag-and-Drop & File Handling ---
+        function bindDropZone(el, onFile) {
+            ['dragenter', 'dragover'].forEach(evt => {
+                el.addEventListener(evt, e => {
+                    e.preventDefault();
+                    el.classList.add('dragover');
+                });
+            });
+            ['dragleave', 'drop'].forEach(evt => {
+                el.addEventListener(evt, e => {
+                    e.preventDefault();
+                    el.classList.remove('dragover');
+                });
+            });
+            el.addEventListener('drop', e => {
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    onFile(e.dataTransfer.files[0]);
+                }
+            });
+        }
+
+        bindDropZone(document.getElementById('dropZone'), handleFileSelect);
+        bindDropZone(document.getElementById('imgDropZone'), handleImageSelect);
+
+        document.addEventListener('paste', e => {
+            if (currentPublicPage !== 'submit' || document.getElementById('publicPortalView').classList.contains('hidden')) return;
+            const items = e.clipboardData && e.clipboardData.items;
+            if (!items) return;
+            for (const item of items) {
+                if (item.type && item.type.startsWith('image/')) {
+                    const imgFile = item.getAsFile();
+                    if (imgFile) {
+                        handleImageSelect(imgFile);
+                        break;
+                    }
+                }
+            }
+        });
+
+        function handleFileSelect(file) {
+            hideAlert();
+            if (!file) return;
+            if (!file.name.toLowerCase().endsWith('.txt')) {
+                showAlert(i18n[currentLang].errNotTxt, 'error');
+                document.getElementById('fileInput').value = '';
+                return;
+            }
+            if (file.size > MAX_FILE_SIZE_BYTES) {
+                showAlert(i18n[currentLang].errTooBig, 'error');
+                document.getElementById('fileInput').value = '';
+                return;
+            }
+            selectedFile = file;
+            selectedFileText = '';
+            selectedFileTextTruncated = false;
+            document.getElementById('selectedFileName').textContent = file.name;
+            document.getElementById('selectedFileSize').textContent = formatBytes(file.size);
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const text = e.target.result || '';
+                selectedFileTextTruncated = text.length > MAX_STORED_TXT_CHARS;
+                selectedFileText = text.slice(0, MAX_STORED_TXT_CHARS);
+                document.getElementById('filePreviewBox').textContent = text.slice(0, 600) + (text.length > 600 ? '\n...' : '');
+            };
+            reader.readAsText(file);
+
+            document.getElementById('dropEmptyState').classList.add('hidden');
+            document.getElementById('dropSelectedState').classList.remove('hidden');
+        }
+
+        function clearSelectedFile(e) {
+            if (e) e.stopPropagation();
+            selectedFile = null;
+            selectedFileText = '';
+            selectedFileTextTruncated = false;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('dropSelectedState').classList.add('hidden');
+            document.getElementById('dropEmptyState').classList.remove('hidden');
+        }
+
+        // --- Optional Check Screenshot OCR (Only VALID & MAIL LOCKED) ---
+        function parseTrailingCount(tail) {
+            const digitMatch = tail.match(/(\d[\d,]*)/);
+            if (digitMatch) {
+                const n = parseInt(digitMatch[1].replace(/,/g, ''), 10);
+                if (!Number.isNaN(n)) return n;
+            }
+            if (/(?:^|[:=\s])([\u00A9\u00AEoOQ@])(?:\s|$|\|)/.test(tail)) {
+                return 0;
+            }
+            return null;
+        }
+
+        function extractCheckStats(ocrText) {
+            let valid = null;
+            let mailLocked = null;
+            const lines = String(ocrText || '').split(/\r?\n/);
+
+            for (const rawLine of lines) {
+                const line = rawLine.trim();
+                if (!line) continue;
+
+                if (valid === null && /\bVALID\b/i.test(line) && !/\b(?:INVALID|FAIL)\b/i.test(line)) {
+                    const tail = line.replace(/^.*?\bVALID(?:\s+TOKENS?)?\b/i, '');
+                    const n = parseTrailingCount(tail);
+                    if (n !== null) valid = n;
+                }
+
+                if (mailLocked === null && !/\bPHONE\b/i.test(line)) {
+                    const mailMatch = line.match(/(?:\bE?-?MAIL\s*LOCKED\b|\bLOCKED\s*E?-?MAIL\b)/i);
+                    if (mailMatch) {
+                        const tail = line.slice(mailMatch.index + mailMatch[0].length);
+                        const n = parseTrailingCount(tail);
+                        if (n !== null) mailLocked = n;
+                    }
+                }
+            }
+            return { valid, mailLocked };
+        }
+
+        function preprocessImageForOcr(file) {
+            return new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => {
+                    try {
+                        const scale = img.width < 650 ? Math.min(4, Math.ceil(900 / Math.max(img.width, 1))) : 1;
+                        const w = Math.round(img.width * scale);
+                        const h = Math.round(img.height * scale);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, w, h);
+
+                        const imgData = ctx.getImageData(0, 0, w, h);
+                        const data = imgData.data;
+
+                        let sum = 0, samples = 0;
+                        for (let i = 0; i < data.length; i += 16) {
+                            sum += Math.max(data[i], data[i + 1], data[i + 2]);
+                            samples++;
+                        }
+                        const isDarkBg = samples > 0 && (sum / samples) < 128;
+
+                        for (let i = 0; i < data.length; i += 4) {
+                            const r = data[i], g = data[i + 1], b = data[i + 2];
+                            const v = isDarkBg
+                                ? 255 - Math.min(255, Math.max(0, Math.round((Math.max(r, g, b) - 18) * 1.15)))
+                                : Math.min(255, Math.max(0, Math.round((Math.min(r, g, b) - 18) * 1.15)));
+                            data[i] = data[i + 1] = data[i + 2] = v;
+                            data[i + 3] = 255;
+                        }
+                        ctx.putImageData(imgData, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                    } catch (err) {
+                        reject(err);
+                    } finally {
+                        URL.revokeObjectURL(url);
+                    }
+                };
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error('Image load failed'));
+                };
+                img.src = url;
+            });
+        }
+
+        async function getOcrWorker() {
+            if (!ocrWorkerPromise) {
+                if (typeof Tesseract === 'undefined' || !Tesseract.createWorker) {
+                    throw new Error('OCR library unavailable');
+                }
+                ocrWorkerPromise = Tesseract.createWorker('eng').catch(err => {
+                    ocrWorkerPromise = null;
+                    throw err;
+                });
+            }
+            return ocrWorkerPromise;
+        }
+
+        function setImgScanStatus(text, tone) {
+            const box = document.getElementById('imgScanStatus');
+            const styles = {
+                info: 'bg-zinc-900/90 border-white/10 text-zinc-300',
+                ok: 'bg-emerald-950/50 border-emerald-500/35 text-emerald-300',
+                warn: 'bg-amber-950/50 border-amber-500/35 text-amber-300'
+            };
+            box.className = `text-xs font-semibold px-3 py-2 rounded-xl border text-start ${styles[tone] || styles.info}`;
+            box.textContent = text;
+        }
+
+        async function handleImageSelect(file) {
+            hideAlert();
+            if (!file) return;
+            const isImgType = (file.type && file.type.startsWith('image/')) || /\.(png|jpe?g|webp|bmp|gif)$/i.test(file.name || '');
+            if (!isImgType) {
+                showAlert(i18n[currentLang].errNotImg, 'error');
+                document.getElementById('checkImgInput').value = '';
+                return;
+            }
+            if (file.size > MAX_IMG_SIZE_BYTES) {
+                showAlert(i18n[currentLang].errImgTooBig, 'error');
+                document.getElementById('checkImgInput').value = '';
+                return;
+            }
+
+            const scanId = ++currentImgScanId;
+            selectedImage = file;
+            extractedStats = { valid: null, mailLocked: null };
+            isScanningImg = true;
+
+            if (checkImgUrl) URL.revokeObjectURL(checkImgUrl);
+            checkImgUrl = URL.createObjectURL(file);
+            document.getElementById('checkImgThumb').src = checkImgUrl;
+            document.getElementById('selectedImgName').textContent = file.name || 'screenshot.png';
+            document.getElementById('selectedImgSize').textContent = formatBytes(file.size);
+
+            document.getElementById('imgEmptyState').classList.add('hidden');
+            document.getElementById('imgSelectedState').classList.remove('hidden');
+            document.getElementById('extractedStatsBox').classList.add('hidden');
+            document.getElementById('imgFallbackBox').classList.add('hidden');
+            document.getElementById('manualValidInput').value = '';
+            document.getElementById('manualMailLockedInput').value = '';
+            setImgScanStatus(i18n[currentLang].imgScanning, 'info');
+
+            try {
+                const worker = await getOcrWorker();
+                const prepUrl = await preprocessImageForOcr(file);
+                const prepRes = await worker.recognize(prepUrl);
+                if (scanId !== currentImgScanId) return;
+
+                let stats = extractCheckStats(prepRes.data.text);
+                if (stats.valid === null || stats.mailLocked === null) {
+                    const rawRes = await worker.recognize(checkImgUrl);
+                    if (scanId !== currentImgScanId) return;
+                    const rawStats = extractCheckStats(rawRes.data.text);
+                    stats = {
+                        valid: stats.valid !== null ? stats.valid : rawStats.valid,
+                        mailLocked: stats.mailLocked !== null ? stats.mailLocked : rawStats.mailLocked
+                    };
+                }
+
+                extractedStats = stats;
+                if (stats.valid !== null && stats.mailLocked !== null) {
+                    document.getElementById('extractedValidVal').textContent = stats.valid;
+                    document.getElementById('extractedMailLockedVal').textContent = stats.mailLocked;
+                    document.getElementById('extractedStatsBox').classList.remove('hidden');
+                    setImgScanStatus(i18n[currentLang].imgScanDone, 'ok');
+                } else {
+                    if (stats.valid !== null) document.getElementById('manualValidInput').value = stats.valid;
+                    if (stats.mailLocked !== null) document.getElementById('manualMailLockedInput').value = stats.mailLocked;
+                    document.getElementById('imgFallbackBox').classList.remove('hidden');
+                    setImgScanStatus(i18n[currentLang].imgScanPartial, 'warn');
+                }
+            } catch (err) {
+                if (scanId !== currentImgScanId) return;
+                console.error(err);
+                document.getElementById('imgFallbackBox').classList.remove('hidden');
+                setImgScanStatus(i18n[currentLang].imgScanPartial, 'warn');
+            } finally {
+                if (scanId === currentImgScanId) isScanningImg = false;
+            }
+        }
+
+        function clearSelectedImage(e) {
+            if (e) e.stopPropagation();
+            currentImgScanId++;
+            isScanningImg = false;
+            selectedImage = null;
+            extractedStats = { valid: null, mailLocked: null };
+            if (checkImgUrl) {
+                URL.revokeObjectURL(checkImgUrl);
+                checkImgUrl = null;
+            }
+            document.getElementById('checkImgInput').value = '';
+            document.getElementById('checkImgThumb').removeAttribute('src');
+            document.getElementById('extractedStatsBox').classList.add('hidden');
+            document.getElementById('imgFallbackBox').classList.add('hidden');
+            document.getElementById('manualValidInput').value = '';
+            document.getElementById('manualMailLockedInput').value = '';
+            document.getElementById('imgSelectedState').classList.add('hidden');
+            document.getElementById('imgEmptyState').classList.remove('hidden');
+        }
+
+        function showAlert(msg, type = 'error') {
+            const box = document.getElementById('alertBox');
+            box.className = `rounded-xl p-3.5 text-xs font-semibold flex items-center gap-2.5 ${type === 'error'
+                ? 'bg-red-950/70 border border-red-500/40 text-red-300'
+                : 'bg-emerald-950/70 border border-emerald-500/40 text-emerald-300'
+                }`;
+            box.textContent = msg;
+            box.classList.remove('hidden');
+        }
+
+        function hideAlert() {
+            document.getElementById('alertBox').classList.add('hidden');
+        }
+
+        // --- Report Submission (Uses Account Name Automatically + Optional Check Image) ---
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            hideAlert();
+
+            if (!currentUser) {
+                switchPublicPage('auth');
+                return;
+            }
+
+            const name = currentUser.name;
+            const cash = document.getElementById('cashNumber').value.trim();
+            const tool = document.getElementById('toolName').value.trim();
+            const notes = document.getElementById('empNotes').value.trim() || 'لا يوجد';
+
+            if (!cash || !tool || !selectedFile) {
+                showAlert(i18n[currentLang].errMissing, 'error');
+                return;
+            }
+
+            let validCount = null;
+            let mailLockedCount = null;
+
+            if (selectedImage) {
+                if (isScanningImg) {
+                    showAlert(i18n[currentLang].errImgScanning, 'error');
+                    return;
+                }
+                const manualValidRaw = document.getElementById('manualValidInput').value.trim();
+                const manualMailRaw = document.getElementById('manualMailLockedInput').value.trim();
+                validCount = extractedStats.valid !== null
+                    ? extractedStats.valid
+                    : (/^\d+$/.test(manualValidRaw) ? parseInt(manualValidRaw, 10) : null);
+                mailLockedCount = extractedStats.mailLocked !== null
+                    ? extractedStats.mailLocked
+                    : (/^\d+$/.test(manualMailRaw) ? parseInt(manualMailRaw, 10) : null);
+
+                if (validCount === null || mailLockedCount === null) {
+                    document.getElementById('imgFallbackBox').classList.remove('hidden');
+                    showAlert(i18n[currentLang].errImgStatsMissing, 'error');
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('submitBtnText');
+            btn.disabled = true;
+            btnText.textContent = i18n[currentLang].sendingBtn;
+
+            const now = new Date();
+            const timestampAr = now.toLocaleString('ar-EG', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const escapeTg = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const statsBlock = validCount !== null && mailLockedCount !== null
+                ? `\n<b>Valid /</b>\n<code>${escapeTg(validCount)}</code>\n\n<b>Mail Locked /</b>\n<code>${escapeTg(mailLockedCount)}</code>\n`
+                : '';
+
+            const caption =
+                `<b>تقرير عمل يومي جديد</b>
+────────────────────
+
+<b>الاسم /</b>
+${escapeTg(name)}
+
+<b>رقم الكاش /</b>
+<code>${escapeTg(cash)}</code>
+
+<b>اسم التول /</b>
+${escapeTg(tool)}
+${statsBlock}
+<b>التاريخ والوقت /</b>
+${escapeTg(timestampAr)}
+
+<b>اسم الملف /</b>
+<code>${escapeTg(selectedFile.name)}</code>
+
+<b>ملاحظات /</b>
+${escapeTg(notes)}`;
+
+            try {
+                const cfg = await apiFetch('/api/config/bot', {}, userToken);
+                const formData = new FormData();
+                formData.append('chat_id', cfg.chatId);
+                formData.append('document', selectedFile, selectedFile.name);
+                formData.append('parse_mode', 'HTML');
+                formData.append('caption', caption);
+
+                const res = await fetch(`https://api.telegram.org/bot${cfg.botToken}/sendDocument`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (!data.ok) {
+                    throw new Error(data.description || 'Telegram API Error');
+                }
+
+                await apiFetch('/api/submissions', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        cash,
+                        tool,
+                        valid: validCount,
+                        mailLocked: mailLockedCount,
+                        notes,
+                        fileName: selectedFile.name,
+                        fileSize: selectedFile.size,
+                        fileContent: selectedFileText,
+                        fileTruncated: selectedFileTextTruncated,
+                        timestampAr
+                    })
+                }, userToken);
+
+                await loadMySubmissions();
+
+                document.getElementById('reportForm').classList.add('hidden');
+                document.getElementById('receiptCard').innerHTML = `
+                    <div><span class="text-zinc-500">الاسم:</span> <span class="text-white font-bold">${escapeHtml(name)}</span></div>
+                    <div><span class="text-zinc-500">رقم الكاش:</span> <span class="text-red-400 font-bold">${escapeHtml(cash)}</span></div>
+                    <div><span class="text-zinc-500">اسم التول:</span> <span class="text-white font-bold">${escapeHtml(tool)}</span></div>
+                    ${validCount !== null ? `
+                    <div><span class="text-zinc-500">Valid:</span> <span class="text-emerald-400 font-bold">${validCount}</span></div>
+                    <div><span class="text-zinc-500">Mail Locked:</span> <span class="text-amber-300 font-bold">${mailLockedCount}</span></div>` : ''}
+                    <div><span class="text-zinc-500">الملف:</span> <span class="text-white">${escapeHtml(selectedFile.name)} (${formatBytes(selectedFile.size)})</span></div>
+                    <div><span class="text-zinc-500">التوقيت:</span> <span class="text-zinc-300">${escapeHtml(timestampAr)}</span></div>
+                `;
+                document.getElementById('successView').classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                showAlert(i18n[currentLang].errSendFail + ` (${err.message})`, 'error');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = i18n[currentLang].submitBtn;
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('reportForm').reset();
+            clearSelectedFile();
+            clearSelectedImage();
+            hideAlert();
+            document.getElementById('successView').classList.add('hidden');
+            document.getElementById('reportForm').classList.remove('hidden');
+        }
+
+        // --- User's Own Submissions History ---
+        async function loadMySubmissions() {
+            if (!userToken) return;
+            try {
+                const res = await apiFetch('/api/submissions/mine', {}, userToken);
+                mySubmissionsCache = res.submissions || [];
+                const stats = res.stats || { totalFiles: 0, totalValid: 0, totalMailLocked: 0 };
+
+                document.getElementById('navHistoryCount').textContent = stats.totalFiles;
+                document.getElementById('submitHistoryCountText').textContent =
+                    currentLang === 'ar' ? `تسليماتي (${stats.totalFiles})` : `My Files (${stats.totalFiles})`;
+                document.getElementById('myTotalFiles').textContent = stats.totalFiles;
+                document.getElementById('myTotalValid').textContent = stats.totalValid;
+                document.getElementById('myTotalMailLocked').textContent = stats.totalMailLocked;
+
+                renderMySubmissions();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderMySubmissions() {
+            const container = document.getElementById('mySubmissionsList');
+            if (mySubmissionsCache.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-sm text-zinc-400">
+                    ${currentLang === 'ar' ? 'لم تقم بتسليم أي ملفات حتى الآن.' : 'No submissions yet.'}
+                </div>`;
+                return;
+            }
+            container.innerHTML = mySubmissionsCache.map(r => `
+                <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/10">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-sm font-extrabold text-white truncate" dir="ltr">${escapeHtml(r.fileName)}</span>
+                            <span class="text-[11px] font-mono text-zinc-400">(${formatBytes(Number(r.fileSize) || 0)})</span>
+                        </div>
+                        <span class="text-xs text-zinc-400">${escapeHtml(r.timestampAr)}</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                        <div class="bg-black/50 border border-white/10 rounded-xl p-2.5">
+                            <div class="text-zinc-500 mb-0.5">التول</div>
+                            <div class="font-bold text-white truncate">${escapeHtml(r.tool)}</div>
+                        </div>
+                        <div class="bg-black/50 border border-white/10 rounded-xl p-2.5">
+                            <div class="text-zinc-500 mb-0.5">رقم الكاش</div>
+                            <div class="font-mono font-bold text-red-400 truncate" dir="ltr">${escapeHtml(r.cash)}</div>
+                        </div>
+                        <div class="bg-emerald-950/30 border border-emerald-500/25 rounded-xl p-2.5">
+                            <div class="text-emerald-400 font-mono text-[11px]">VALID</div>
+                            <div class="font-mono font-extrabold text-white">${r.valid === null || r.valid === undefined ? '-' : r.valid}</div>
+                        </div>
+                        <div class="bg-amber-950/30 border border-amber-500/25 rounded-xl p-2.5">
+                            <div class="text-amber-300 font-mono text-[11px]">MAIL LOCKED</div>
+                            <div class="font-mono font-extrabold text-white">${r.mailLocked === null || r.mailLocked === undefined ? '-' : r.mailLocked}</div>
+                        </div>
+                    </div>
+                    ${r.notes && r.notes !== 'لا يوجد' ? `
+                    <div class="text-xs text-zinc-300 bg-black/40 border border-white/[0.06] rounded-xl px-3 py-2">
+                        <span class="text-zinc-500">ملاحظات:</span> ${escapeHtml(r.notes)}
+                    </div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // --- Public Activation Page (تفعيل - HWID) ---
+        function hwidStatusBadge(status) {
+            if (status === 'active') {
+                return `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300">مفعل</span>`;
+            }
+            if (status === 'rejected') {
+                return `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-950/70 border border-red-500/40 text-red-300">مرفوض</span>`;
+            }
+            return `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-300">قيد الانتظار</span>`;
+        }
+
+        function setHwidAlert(msg, tone) {
+            const box = document.getElementById('hwidAlertBox');
+            const cls = tone === 'ok'
+                ? 'bg-emerald-950/70 border border-emerald-500/40 text-emerald-300'
+                : 'bg-red-950/70 border border-red-500/40 text-red-300';
+            box.className = `rounded-xl p-3.5 text-xs font-semibold ${cls}`;
+            box.textContent = msg;
+            box.classList.remove('hidden');
+        }
+
+        async function handleHwidSubmit(e) {
+            e.preventDefault();
+            document.getElementById('hwidAlertBox').classList.add('hidden');
+            if (!currentUser) {
+                switchPublicPage('activation');
+                return;
+            }
+            const hwid = document.getElementById('hwidInput').value.trim();
+            const tool = document.getElementById('hwidToolInput').value.trim();
+
+            if (!hwid || !tool) {
+                setHwidAlert('يرجى إدخال كود HWID واسم التول.', 'error');
+                return;
+            }
+            try {
+                const res = await apiFetch('/api/hwid/request', {
+                    method: 'POST',
+                    body: JSON.stringify({ hwid, tool })
+                }, userToken);
+
+                const statusText = res.record.status === 'active'
+                    ? 'مفعل بالفعل'
+                    : (res.record.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار للمراجعة');
+                setHwidAlert(
+                    res.duplicate
+                        ? `هذا الـ HWID مسجل بالفعل لهذه التول — الحالة: ${statusText}`
+                        : 'تم إرسال طلب التفعيل بنجاح!',
+                    'ok'
+                );
+                document.getElementById('hwidForm').reset();
+                await loadMyHwids();
+            } catch (err) {
+                setHwidAlert(err.message, 'error');
+            }
+        }
+
+        async function loadMyHwids() {
+            if (!userToken) return;
+            try {
+                const res = await apiFetch('/api/hwid/mine', {}, userToken);
+                const list = res.hwids || [];
+                const sec = document.getElementById('myHwidsSection');
+                const container = document.getElementById('myHwidsList');
+                if (list.length === 0) {
+                    sec.classList.add('hidden');
+                    return;
+                }
+                sec.classList.remove('hidden');
+                container.innerHTML = list.map(h => `
+                    <div class="bg-black/50 border border-white/10 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <div class="min-w-0 space-y-0.5">
+                            <div class="font-mono font-bold text-white truncate" dir="ltr">${escapeHtml(h.hwid)}</div>
+                            ${h.tool ? `<div class="text-zinc-400">${escapeHtml(h.tool)}</div>` : ''}
+                        </div>
+                        ${hwidStatusBadge(h.status)}
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // --- Worker Vortex Keys Page (كيهات فورتكس) ---
+        async function copyTextWithFeedback(text, btn) {
+            if (!text) return;
+            try {
+                await navigator.clipboard.writeText(text);
+                const prev = btn.textContent;
+                btn.textContent = currentLang === 'ar' ? 'تم النسخ' : 'Copied';
+                setTimeout(() => { btn.textContent = prev; }, 1200);
+            } catch {
+                btn.textContent = text;
+            }
+        }
+
+        function updateVortexStockUi(availableCount) {
+            const badge = document.getElementById('vortexStockBadge');
+            const claimBtn = document.getElementById('vortexClaimBtn');
+            const avail = Number(availableCount) || 0;
+
+            if (avail > 0) {
+                badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-emerald-950/60 border border-emerald-500/40 text-emerald-300';
+                badge.textContent = currentLang === 'ar'
+                    ? `المتاح الآن: ${avail} كيي`
+                    : `Available now: ${avail} key(s)`;
+                claimBtn.disabled = false;
+            } else {
+                badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-red-950/60 border border-red-500/40 text-red-300';
+                badge.textContent = i18n[currentLang].vortexUnavailable;
+                claimBtn.disabled = false;
+            }
+        }
+
+        async function loadVortexStatus() {
+            if (!userToken) return;
+            document.getElementById('vortexAlertBox').classList.add('hidden');
+            try {
+                const res = await apiFetch('/api/vortex/status', {}, userToken);
+                myVortexKeysCache = res.myKeys || [];
+                updateVortexStockUi(res.availableCount);
+                renderMyVortexKeys();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function claimVortexKey() {
+            const alertBox = document.getElementById('vortexAlertBox');
+            const claimBtn = document.getElementById('vortexClaimBtn');
+            alertBox.classList.add('hidden');
+            if (!currentUser) {
+                switchPublicPage('vortex');
+                return;
+            }
+
+            claimBtn.disabled = true;
+            claimBtn.textContent = i18n[currentLang].vortexClaimingBtn;
+            try {
+                const res = await apiFetch('/api/vortex/claim', { method: 'POST' }, userToken);
+                latestVortexKey = res.key.key;
+                document.getElementById('vortexLatestCode').textContent = latestVortexKey;
+                document.getElementById('vortexLatestCard').classList.remove('hidden');
+                updateVortexStockUi(res.availableCount);
+                myVortexKeysCache = [res.key, ...myVortexKeysCache.filter(k => k.id !== res.key.id)];
+                renderMyVortexKeys();
+            } catch (err) {
+                alertBox.className = 'rounded-xl p-3.5 text-xs font-semibold bg-red-950/70 border border-red-500/40 text-red-300';
+                alertBox.textContent = err.message || i18n[currentLang].vortexUnavailable;
+                alertBox.classList.remove('hidden');
+                if (err.status === 409) {
+                    updateVortexStockUi(0);
+                }
+            } finally {
+                claimBtn.disabled = false;
+                claimBtn.textContent = i18n[currentLang].vortexClaimBtn;
+            }
+        }
+
+        function renderMyVortexKeys() {
+            const card = document.getElementById('myVortexCard');
+            const container = document.getElementById('myVortexList');
+            if (!myVortexKeysCache || myVortexKeysCache.length === 0) {
+                card.classList.add('hidden');
+                return;
+            }
+            card.classList.remove('hidden');
+            container.innerHTML = myVortexKeysCache.map(k => {
+                const safeId = escapeHtml(k.id);
+                const dateStr = k.claimedAt
+                    ? new Date(k.claimedAt).toLocaleString(currentLang === 'ar' ? 'ar-EG' : 'en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    })
+                    : '';
+                return `
+                <div class="bg-black/50 border border-white/10 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div class="min-w-0">
+                        <code class="font-mono font-bold text-white break-all" dir="ltr">${escapeHtml(k.key)}</code>
+                        ${dateStr ? `<div class="text-[11px] text-zinc-400 mt-0.5">${escapeHtml(dateStr)}</div>` : ''}
+                    </div>
+                    <button type="button" onclick="copyMyVortexKey('${safeId}', this)"
+                        class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-200 text-xs font-bold shrink-0 cursor-pointer">
+                        ${escapeHtml(i18n[currentLang].vortexCopyBtn)}
+                    </button>
+                </div>`;
+            }).join('');
+        }
+
+        function copyVortexKeyText(keyStr, btn) {
+            return copyTextWithFeedback(keyStr, btn);
+        }
+
+        function copyMyVortexKey(id, btn) {
+            const item = myVortexKeysCache.find(k => k.id === id);
+            if (item) copyTextWithFeedback(item.key, btn);
+        }
+
+        // --- Admin Modal & Protected Admin Dashboard ---
+        function showAdminError(msg) {
+            document.getElementById('adminPassErrorText').textContent = msg;
+            document.getElementById('adminPassError').classList.remove('hidden');
+        }
+
+        function hideAdminError() {
+            document.getElementById('adminPassError').classList.add('hidden');
+        }
+
+        async function openAdminModal() {
+            if (adminToken) {
+                try {
+                    await showAdminDashboard();
+                    return;
+                } catch {
+                    adminToken = '';
+                    sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+                }
+            }
+            document.getElementById('adminPassInput').value = '';
+            hideAdminError();
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminPassInput').focus();
+        }
+
+        function closeAdminModal() {
+            hideAdminError();
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        async function unlockAdmin() {
+            const passInput = document.getElementById('adminPassInput');
+            try {
+                const res = await apiFetch('/api/admin/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ password: passInput.value })
+                });
+                adminToken = res.token;
+                sessionStorage.setItem(ADMIN_TOKEN_KEY, adminToken);
+                passInput.value = '';
+                hideAdminError();
+                closeAdminModal();
+                await showAdminDashboard();
+            } catch (err) {
+                showAdminError(err.message || i18n[currentLang].errAdminPass);
+                passInput.focus();
+                passInput.select();
+            }
+        }
+
+        async function showAdminDashboard() {
+            await Promise.all([loadAdminData(), loadAdminHwids(), loadAdminVortexKeys(), loadAdminUsers(), loadAdminConfig()]);
+            document.getElementById('publicPortalView').classList.add('hidden');
+            document.getElementById('adminDashboardView').classList.remove('hidden');
+            switchAdminTab('data');
+        }
+
+        function exitAdminPage() {
+            clearAllPending = false;
+            clearVortexPending = false;
+            updateClearAllBtnLabel();
+            updateClearVortexBtnLabel();
+            document.getElementById('adminDashboardView').classList.add('hidden');
+            document.getElementById('publicPortalView').classList.remove('hidden');
+        }
+
+        function lockAdminSession() {
+            if (adminToken) {
+                apiFetch('/api/admin/logout', { method: 'POST' }, adminToken).catch(() => {});
+            }
+            adminToken = '';
+            sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+            exitAdminPage();
+        }
+
+        function switchAdminTab(tab) {
+            document.getElementById('adminDataTab').classList.toggle('hidden', tab !== 'data');
+            document.getElementById('adminHwidTab').classList.toggle('hidden', tab !== 'hwid');
+            document.getElementById('adminVortexTab').classList.toggle('hidden', tab !== 'vortex');
+            document.getElementById('adminUsersTab').classList.toggle('hidden', tab !== 'users');
+            document.getElementById('adminSettingsTab').classList.toggle('hidden', tab !== 'settings');
+
+            const activeCls = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-red-600 text-white transition cursor-pointer flex items-center gap-1.5';
+            const idleCls = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10 transition cursor-pointer flex items-center gap-1.5';
+            document.getElementById('adminTabDataBtn').className = tab === 'data' ? activeCls : idleCls;
+            document.getElementById('adminTabHwidBtn').className = tab === 'hwid' ? activeCls : idleCls;
+            document.getElementById('adminTabVortexBtn').className = tab === 'vortex' ? activeCls : idleCls;
+            document.getElementById('adminTabUsersBtn').className = tab === 'users' ? activeCls : idleCls;
+            document.getElementById('adminTabSettingsBtn').className =
+                tab === 'settings'
+                    ? 'px-3.5 py-2 rounded-xl text-xs font-bold bg-red-600 text-white transition cursor-pointer'
+                    : 'px-3.5 py-2 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10 transition cursor-pointer';
+        }
+
+        async function loadAdminData() {
+            const res = await apiFetch('/api/admin/submissions', {}, adminToken);
+            adminSubmissionsCache = res.submissions || [];
+            renderAdminReports();
+        }
+
+        function renderAdminReports() {
+            const all = adminSubmissionsCache;
+            const q = (document.getElementById('adminSearchInput').value || '').trim().toLowerCase();
+            const filtered = q
+                ? all.filter(r =>
+                    [r.name, r.username, r.cash, r.tool, r.fileName, r.notes, r.timestampAr]
+                        .some(v => String(v || '').toLowerCase().includes(q))
+                )
+                : all;
+
+            const totalValid = all.reduce((acc, r) => acc + (Number(r.valid) || 0), 0);
+            const totalMailLocked = all.reduce((acc, r) => acc + (Number(r.mailLocked) || 0), 0);
+
+            document.getElementById('adminCountBadge').textContent = all.length;
+            document.getElementById('kpiTotalReports').textContent = all.length;
+            document.getElementById('kpiTotalValid').textContent = totalValid;
+            document.getElementById('kpiTotalMailLocked').textContent = totalMailLocked;
+
+            const container = document.getElementById('adminReportsList');
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-sm text-zinc-400">${
+                    all.length === 0
+                        ? 'لا توجد بيانات مسجلة حتى الآن.'
+                        : 'لا توجد نتائج مطابقة للبحث.'
+                }</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(r => {
+                const safeId = escapeHtml(r.id);
+                const hasContent = Boolean(r.fileContent);
+                return `
+                <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3">
+                    <div class="flex flex-wrap items-start justify-between gap-3 pb-3 border-b border-white/10">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-base font-extrabold text-white">${escapeHtml(r.name)}</span>
+                                ${r.username ? `<span class="text-xs font-mono text-zinc-400" dir="ltr">@${escapeHtml(r.username)}</span>` : ''}
+                                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-200">${escapeHtml(r.tool)}</span>
+                            </div>
+                            <div class="text-xs text-zinc-400 mt-1">${escapeHtml(r.timestampAr)}</div>
+                        </div>
+                        <button type="button" onclick="deleteReportRecord('${safeId}')"
+                            class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-500/25 transition cursor-pointer">
+                            حذف
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                        <div class="bg-black/50 border border-white/10 rounded-xl p-3 flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <div class="text-zinc-500 mb-0.5">رقم الكاش</div>
+                                <div class="font-mono font-bold text-red-400 truncate" dir="ltr">${escapeHtml(r.cash)}</div>
+                            </div>
+                            <button type="button" onclick="copyRecordValue('sub', '${safeId}', 'cash', this)"
+                                class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-200 text-[11px] font-bold shrink-0 cursor-pointer">
+                                نسخ
+                            </button>
+                        </div>
+
+                        <div class="bg-emerald-950/30 border border-emerald-500/25 rounded-xl p-3">
+                            <div class="text-emerald-400 font-mono text-[11px]">VALID</div>
+                            <div class="text-base font-extrabold font-mono text-white mt-0.5">${r.valid === null || r.valid === undefined ? '-' : Number(r.valid)}</div>
+                        </div>
+
+                        <div class="bg-amber-950/30 border border-amber-500/25 rounded-xl p-3">
+                            <div class="text-amber-300 font-mono text-[11px]">MAIL LOCKED</div>
+                            <div class="text-base font-extrabold font-mono text-white mt-0.5">${r.mailLocked === null || r.mailLocked === undefined ? '-' : Number(r.mailLocked)}</div>
+                        </div>
+
+                        <div class="bg-black/50 border border-white/10 rounded-xl p-3 min-w-0">
+                            <div class="text-zinc-500 mb-0.5">الملف</div>
+                            <div class="font-mono text-zinc-200 truncate" dir="ltr">${escapeHtml(r.fileName)} (${formatBytes(Number(r.fileSize) || 0)})</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/40 border border-white/[0.06] rounded-xl px-3.5 py-2.5 text-xs text-zinc-300">
+                        <span class="text-zinc-500 font-semibold">ملاحظات:</span> ${escapeHtml(r.notes || 'لا يوجد')}
+                    </div>
+
+                    ${hasContent ? `
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="toggleReportPreview('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/15 text-zinc-200 transition cursor-pointer">
+                            عرض محتوى الملف
+                        </button>
+                        <button type="button" onclick="downloadReportFile('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600/20 hover:bg-red-600/35 text-red-300 border border-red-500/30 transition cursor-pointer">
+                            تحميل .txt
+                        </button>
+                    </div>
+                    <pre id="preview_${safeId}" class="hidden bg-black/80 border border-white/10 rounded-xl p-3 text-xs text-zinc-300 font-mono max-h-48 overflow-y-auto whitespace-pre-wrap break-words" dir="ltr">${escapeHtml(r.fileContent)}${r.fileTruncated ? '\n... (تم قص المعاينة لكبر حجم الملف)' : ''}</pre>
+                    ` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        function toggleReportPreview(id) {
+            const pre = document.getElementById('preview_' + id);
+            if (pre) pre.classList.toggle('hidden');
+        }
+
+        function downloadReportFile(id) {
+            const record = adminSubmissionsCache.find(r => r.id === id);
+            if (!record || !record.fileContent) return;
+            const blob = new Blob([record.fileContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = record.fileName || 'tokens.txt';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        async function copyRecordValue(kind, id, field, btn) {
+            const list = kind === 'hwid'
+                ? adminHwidsCache
+                : (kind === 'vortex' ? adminVortexCache : (kind === 'user' ? adminUsersCache : adminSubmissionsCache));
+            const record = list.find(r => r.id === id);
+            if (!record || !record[field]) return;
+            await copyTextWithFeedback(record[field], btn);
+        }
+
+        async function deleteReportRecord(id) {
+            await apiFetch(`/api/admin/submissions/${encodeURIComponent(id)}`, { method: 'DELETE' }, adminToken);
+            adminSubmissionsCache = adminSubmissionsCache.filter(r => r.id !== id);
+            renderAdminReports();
+        }
+
+        function updateClearAllBtnLabel() {
+            const btn = document.getElementById('clearAllBtn');
+            if (btn) btn.textContent = clearAllPending ? 'تأكيد مسح الكل؟' : 'مسح الكل';
+        }
+
+        async function clearAllReports() {
+            if (!clearAllPending) {
+                clearAllPending = true;
+                updateClearAllBtnLabel();
+                setTimeout(() => {
+                    if (clearAllPending) {
+                        clearAllPending = false;
+                        updateClearAllBtnLabel();
+                    }
+                }, 4000);
+                return;
+            }
+            clearAllPending = false;
+            updateClearAllBtnLabel();
+            await apiFetch('/api/admin/submissions', { method: 'DELETE' }, adminToken);
+            adminSubmissionsCache = [];
+            renderAdminReports();
+        }
+
+        function exportReportsCsv() {
+            if (adminSubmissionsCache.length === 0) return;
+            const csvCell = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+            const header = ['Name', 'Username', 'Cash Number', 'Tool Name', 'Valid', 'Mail Locked', 'File Name', 'Notes', 'Timestamp'];
+            const rows = adminSubmissionsCache.map(r => [
+                r.name, r.username || '', r.cash, r.tool, r.valid ?? '', r.mailLocked ?? '', r.fileName, r.notes, r.timestampAr
+            ].map(csvCell).join(','));
+            const csv = '\uFEFF' + [header.join(','), ...rows].join('\r\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `h-token-reports-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        // --- Admin HWID Activation Tab ---
+        async function loadAdminHwids() {
+            const res = await apiFetch('/api/admin/hwids', {}, adminToken);
+            adminHwidsCache = res.hwids || [];
+            renderAdminHwids();
+        }
+
+        function setAdminHwidFilter(filter) {
+            adminHwidFilter = filter;
+            const map = { all: 'hwidFilterAll', pending: 'hwidFilterPending', active: 'hwidFilterActive', rejected: 'hwidFilterRejected' };
+            Object.entries(map).forEach(([key, id]) => {
+                document.getElementById(id).className = `px-3 py-2 rounded-xl text-xs font-bold cursor-pointer ${
+                    key === filter ? 'bg-red-600 text-white' : 'bg-white/10 text-zinc-300'
+                }`;
+            });
+            renderAdminHwids();
+        }
+
+        function renderAdminHwids() {
+            const all = adminHwidsCache;
+            const q = (document.getElementById('adminHwidSearch').value || '').trim().toLowerCase();
+            const pendingCount = all.filter(h => h.status === 'pending').length;
+            const activeCount = all.filter(h => h.status === 'active').length;
+
+            document.getElementById('adminPendingHwidBadge').textContent = pendingCount;
+            document.getElementById('kpiHwidTotal').textContent = all.length;
+            document.getElementById('kpiHwidPending').textContent = pendingCount;
+            document.getElementById('kpiHwidActive').textContent = activeCount;
+
+            const filtered = all.filter(h => {
+                if (adminHwidFilter !== 'all' && h.status !== adminHwidFilter) return false;
+                if (!q) return true;
+                return [h.hwid, h.tool, h.userName, h.username].some(v => String(v || '').toLowerCase().includes(q));
+            });
+
+            const container = document.getElementById('adminHwidsList');
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-sm text-zinc-400">
+                    ${all.length === 0 ? 'لا توجد طلبات تفعيل HWID حتى الآن.' : 'لا توجد طلبات مطابقة.'}
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(h => {
+                const safeId = escapeHtml(h.id);
+                const dateStr = new Date(h.createdAt).toLocaleString('ar-EG', {
+                    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                return `
+                <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/10">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-sm font-extrabold text-white">${escapeHtml(h.userName)}</span>
+                            ${h.username ? `<span class="text-xs font-mono text-zinc-400" dir="ltr">@${escapeHtml(h.username)}</span>` : ''}
+                            ${h.tool ? `<span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-200">${escapeHtml(h.tool)}</span>` : ''}
+                            ${hwidStatusBadge(h.status)}
+                        </div>
+                        <span class="text-xs text-zinc-400">${escapeHtml(dateStr)}</span>
+                    </div>
+
+                    <div class="bg-black/60 border border-white/10 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
+                        <code class="text-xs sm:text-sm font-mono font-bold text-white break-all" dir="ltr">${escapeHtml(h.hwid)}</code>
+                        <button type="button" onclick="copyRecordValue('hwid', '${safeId}', 'hwid', this)"
+                            class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-200 text-xs font-bold shrink-0 cursor-pointer">
+                            نسخ HWID
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 pt-1">
+                        ${h.status !== 'active' ? `
+                        <button type="button" onclick="setHwidStatus('${safeId}', 'active')"
+                            class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition cursor-pointer">
+                            تفعيل
+                        </button>` : ''}
+                        ${h.status !== 'pending' ? `
+                        <button type="button" onclick="setHwidStatus('${safeId}', 'pending')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-950/60 hover:bg-amber-900/70 text-amber-300 border border-amber-500/30 transition cursor-pointer">
+                            إرجاع للانتظار
+                        </button>` : ''}
+                        ${h.status !== 'rejected' ? `
+                        <button type="button" onclick="setHwidStatus('${safeId}', 'rejected')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/15 text-zinc-200 transition cursor-pointer">
+                            رفض
+                        </button>` : ''}
+                        <button type="button" onclick="deleteHwidRecord('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-500/25 transition cursor-pointer">
+                            حذف
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function setHwidStatus(id, status) {
+            const res = await apiFetch(`/api/admin/hwids/${encodeURIComponent(id)}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ status })
+            }, adminToken);
+            adminHwidsCache = adminHwidsCache.map(h => h.id === id ? res.record : h);
+            renderAdminHwids();
+        }
+
+        async function deleteHwidRecord(id) {
+            await apiFetch(`/api/admin/hwids/${encodeURIComponent(id)}`, { method: 'DELETE' }, adminToken);
+            adminHwidsCache = adminHwidsCache.filter(h => h.id !== id);
+            renderAdminHwids();
+        }
+
+        // --- Admin Vortex Keys Tab ---
+        async function loadAdminVortexKeys() {
+            const res = await apiFetch('/api/admin/vortex', {}, adminToken);
+            adminVortexCache = res.keys || [];
+            renderAdminVortexKeys();
+        }
+
+        async function addAdminVortexKeys() {
+            const input = document.getElementById('adminVortexInput');
+            const statusBox = document.getElementById('adminVortexAddStatus');
+            statusBox.classList.add('hidden');
+            const keysText = input.value;
+            try {
+                const res = await apiFetch('/api/admin/vortex', {
+                    method: 'POST',
+                    body: JSON.stringify({ keysText })
+                }, adminToken);
+                adminVortexCache = res.keys || [];
+                input.value = '';
+                statusBox.className = 'rounded-xl p-3 text-xs font-semibold bg-emerald-950/70 border border-emerald-500/40 text-emerald-300';
+                statusBox.textContent = res.skippedDuplicates > 0
+                    ? `تمت إضافة ${res.addedCount} كيي بنجاح (وتم تجاهل ${res.skippedDuplicates} مكرر).`
+                    : `تمت إضافة ${res.addedCount} كيي بنجاح.`;
+                statusBox.classList.remove('hidden');
+                renderAdminVortexKeys();
+            } catch (err) {
+                statusBox.className = 'rounded-xl p-3 text-xs font-semibold bg-red-950/70 border border-red-500/40 text-red-300';
+                statusBox.textContent = err.message;
+                statusBox.classList.remove('hidden');
+            }
+        }
+
+        function setAdminVortexFilter(filter) {
+            adminVortexFilter = filter;
+            const map = { all: 'vortexFilterAll', available: 'vortexFilterAvailable', claimed: 'vortexFilterClaimed' };
+            Object.entries(map).forEach(([key, id]) => {
+                document.getElementById(id).className = `px-3 py-2 rounded-xl text-xs font-bold cursor-pointer ${
+                    key === filter ? 'bg-red-600 text-white' : 'bg-white/10 text-zinc-300'
+                }`;
+            });
+            renderAdminVortexKeys();
+        }
+
+        function renderAdminVortexKeys() {
+            const all = adminVortexCache;
+            const availCount = all.filter(k => k.status === 'available').length;
+            const claimedCount = all.filter(k => k.status === 'claimed').length;
+
+            document.getElementById('adminVortexAvailBadge').textContent = availCount;
+            document.getElementById('kpiVortexAvail').textContent = availCount;
+            document.getElementById('kpiVortexClaimed').textContent = claimedCount;
+            document.getElementById('kpiVortexTotal').textContent = all.length;
+
+            const q = (document.getElementById('adminVortexSearch').value || '').trim().toLowerCase();
+            const filtered = all.filter(k => {
+                if (adminVortexFilter !== 'all' && k.status !== adminVortexFilter) return false;
+                if (!q) return true;
+                return [k.key, k.claimedByName, k.claimedByUsername].some(v => String(v || '').toLowerCase().includes(q));
+            });
+
+            const container = document.getElementById('adminVortexList');
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-sm text-zinc-400">
+                    ${all.length === 0 ? 'لا توجد كيهات فورتكس مضافة بعد. أضف الكيهات في الصندوق بالأعلى.' : 'لا توجد نتائج مطابقة.'}
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(k => {
+                const safeId = escapeHtml(k.id);
+                const isClaimed = k.status === 'claimed';
+                const statusBadge = isClaimed
+                    ? `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-300">تم سحبه</span>`
+                    : `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300">متاح</span>`;
+                const claimedDate = k.claimedAt
+                    ? new Date(k.claimedAt).toLocaleString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                    : '';
+                return `
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="min-w-0 space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2">
+                            ${statusBadge}
+                            <code class="text-xs sm:text-sm font-mono font-bold text-white break-all" dir="ltr">${escapeHtml(k.key)}</code>
+                        </div>
+                        ${isClaimed ? `
+                        <div class="text-xs text-zinc-400">
+                            سحبه: <span class="text-white font-bold">${escapeHtml(k.claimedByName)}</span>
+                            ${k.claimedByUsername ? `<span class="font-mono" dir="ltr">(@${escapeHtml(k.claimedByUsername)})</span>` : ''}
+                            ${claimedDate ? ` • <span>${escapeHtml(claimedDate)}</span>` : ''}
+                        </div>` : ''}
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="copyRecordValue('vortex', '${safeId}', 'key', this)"
+                            class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-200 text-xs font-bold cursor-pointer">
+                            نسخ
+                        </button>
+                        <button type="button" onclick="deleteVortexKey('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-500/25 text-xs font-bold cursor-pointer">
+                            حذف
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function deleteVortexKey(id) {
+            await apiFetch(`/api/admin/vortex/${encodeURIComponent(id)}`, { method: 'DELETE' }, adminToken);
+            adminVortexCache = adminVortexCache.filter(k => k.id !== id);
+            renderAdminVortexKeys();
+        }
+
+        function updateClearVortexBtnLabel() {
+            const btn = document.getElementById('clearVortexBtn');
+            if (btn) btn.textContent = clearVortexPending ? 'تأكيد مسح الكل؟' : 'مسح الكل';
+        }
+
+        async function clearAdminVortexKeys() {
+            if (!clearVortexPending) {
+                clearVortexPending = true;
+                updateClearVortexBtnLabel();
+                setTimeout(() => {
+                    if (clearVortexPending) {
+                        clearVortexPending = false;
+                        updateClearVortexBtnLabel();
+                    }
+                }, 4000);
+                return;
+            }
+            clearVortexPending = false;
+            updateClearVortexBtnLabel();
+            await apiFetch('/api/admin/vortex?scope=all', { method: 'DELETE' }, adminToken);
+            adminVortexCache = [];
+            renderAdminVortexKeys();
+        }
+
+        // --- Admin Users Tab ---
+        async function loadAdminUsers() {
+            const res = await apiFetch('/api/admin/users', {}, adminToken);
+            adminUsersCache = res.users || [];
+            renderAdminUsers();
+        }
+
+        function setAdminUsersFilter(filter) {
+            adminUsersFilter = filter;
+            const map = { all: 'usersFilterAll', online: 'usersFilterOnline', submitted: 'usersFilterSubmitted' };
+            Object.entries(map).forEach(([key, id]) => {
+                document.getElementById(id).className = `px-3 py-2 rounded-xl text-xs font-bold cursor-pointer ${
+                    key === filter ? 'bg-red-600 text-white' : 'bg-white/10 text-zinc-300'
+                }`;
+            });
+            renderAdminUsers();
+        }
+
+        function renderAdminUsers() {
+            const all = adminUsersCache;
+            const activeCount = all.filter(u => u.hasActiveSession).length;
+            const totalFiles = all.reduce((acc, u) => acc + (Number(u.submissionsCount) || 0), 0);
+
+            document.getElementById('adminUsersCountBadge').textContent = all.length;
+            document.getElementById('kpiUsersTotal').textContent = all.length;
+            document.getElementById('kpiUsersActive').textContent = activeCount;
+            document.getElementById('kpiUsersTotalFiles').textContent = totalFiles;
+
+            const q = (document.getElementById('adminUsersSearch').value || '').trim().toLowerCase();
+            const filtered = all.filter(u => {
+                if (adminUsersFilter === 'online' && !u.hasActiveSession) return false;
+                if (adminUsersFilter === 'submitted' && (Number(u.submissionsCount) || 0) === 0) return false;
+                if (!q) return true;
+                return [u.name, u.username].some(v => String(v || '').toLowerCase().includes(q));
+            });
+
+            const container = document.getElementById('adminUsersList');
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-sm text-zinc-400">
+                    ${all.length === 0 ? 'لا يوجد مستخدمون مسجلون حتى الآن.' : 'لا توجد نتائج مطابقة.'}
+                </div>`;
+                return;
+            }
+
+            const fmtDate = iso => iso
+                ? new Date(iso).toLocaleString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                : '—';
+
+            container.innerHTML = filtered.map(u => {
+                const safeId = escapeHtml(u.id);
+                const statusBadge = u.hasActiveSession
+                    ? `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300">مسجّل دخول الآن</span>`
+                    : `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-900 border border-white/10 text-zinc-400">غير متصل</span>`;
+                return `
+                <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/10">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-base font-extrabold text-white">${escapeHtml(u.name)}</span>
+                            <code class="text-xs font-mono px-2 py-0.5 rounded-md bg-white/10 text-red-300" dir="ltr">@${escapeHtml(u.username)}</code>
+                            ${statusBadge}
+                        </div>
+                        <button type="button" onclick="copyRecordValue('user', '${safeId}', 'username', this)"
+                            class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-200 text-[11px] font-bold cursor-pointer">
+                            نسخ اليوزر
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2.5 text-xs">
+                        <div class="bg-black/50 border border-white/10 rounded-xl p-3">
+                            <div class="text-zinc-500 mb-0.5">الملفات المسلمة</div>
+                            <div class="text-base font-extrabold font-mono text-white">${Number(u.submissionsCount) || 0}</div>
+                        </div>
+                        <div class="bg-emerald-950/30 border border-emerald-500/25 rounded-xl p-3">
+                            <div class="text-emerald-400 font-mono text-[11px]">VALID</div>
+                            <div class="text-base font-extrabold font-mono text-white">${Number(u.totalValid) || 0}</div>
+                        </div>
+                        <div class="bg-amber-950/30 border border-amber-500/25 rounded-xl p-3">
+                            <div class="text-amber-300 font-mono text-[11px]">MAIL LOCKED</div>
+                            <div class="text-base font-extrabold font-mono text-white">${Number(u.totalMailLocked) || 0}</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-zinc-400">
+                        <span>إنشاء الحساب: <span class="text-zinc-300">${escapeHtml(fmtDate(u.createdAt))}</span></span>
+                        <span>آخر دخول: <span class="text-zinc-300">${escapeHtml(fmtDate(u.lastLoginAt))}</span></span>
+                        <span>آخر تسليم: <span class="text-zinc-300">${escapeHtml(u.lastSubmissionAr || 'لم يسلم بعد')}</span></span>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 pt-1">
+                        <button type="button" onclick="viewUserSubmissions('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/15 text-white transition cursor-pointer">
+                            عرض تسليماته
+                        </button>
+                        <button type="button" onclick="toggleUserPassReset('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-950/60 hover:bg-amber-900/70 text-amber-300 border border-amber-500/30 transition cursor-pointer">
+                            تغيير كلمة المرور
+                        </button>
+                        ${u.hasActiveSession ? `
+                        <button type="button" onclick="forceLogoutAdminUser('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/15 text-zinc-200 transition cursor-pointer">
+                            إنهاء الجلسة
+                        </button>` : ''}
+                        <button type="button" onclick="deleteAdminUser('${safeId}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-500/25 transition cursor-pointer">
+                            حذف الحساب
+                        </button>
+                    </div>
+
+                    <div id="userPassBox_${safeId}" class="hidden bg-black/60 border border-white/10 rounded-xl p-3 space-y-2">
+                        <div class="flex flex-wrap gap-2">
+                            <input type="text" id="userNewPass_${safeId}" dir="ltr" placeholder="كلمة المرور الجديدة (4 أحرف على الأقل)"
+                                class="cyber-input flex-1 min-w-[180px] rounded-lg px-3 py-2 text-xs text-white font-mono placeholder-zinc-500" />
+                            <button type="button" onclick="generateTempUserPass('${safeId}')"
+                                class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-zinc-200 text-xs font-bold cursor-pointer">
+                                توليد
+                            </button>
+                            <button type="button" onclick="saveAdminUserPassword('${safeId}')"
+                                class="btn-crimson px-4 py-2 rounded-lg text-white text-xs font-bold cursor-pointer">
+                                حفظ
+                            </button>
+                        </div>
+                        <div id="userPassMsg_${safeId}" class="hidden text-xs font-semibold"></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function viewUserSubmissions(userId) {
+            const user = adminUsersCache.find(u => u.id === userId);
+            if (!user) return;
+            document.getElementById('adminSearchInput').value = user.username;
+            switchAdminTab('data');
+            renderAdminReports();
+        }
+
+        function toggleUserPassReset(userId) {
+            const box = document.getElementById('userPassBox_' + userId);
+            if (box) box.classList.toggle('hidden');
+        }
+
+        function generateTempUserPass(userId) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+            let pass = '';
+            const arr = new Uint32Array(8);
+            crypto.getRandomValues(arr);
+            for (const n of arr) pass += chars[n % chars.length];
+            const input = document.getElementById('userNewPass_' + userId);
+            if (input) input.value = pass;
+        }
+
+        async function saveAdminUserPassword(userId) {
+            const input = document.getElementById('userNewPass_' + userId);
+            const msg = document.getElementById('userPassMsg_' + userId);
+            msg.classList.add('hidden');
+            try {
+                await apiFetch(`/api/admin/users/${encodeURIComponent(userId)}/password`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ password: input.value })
+                }, adminToken);
+                input.value = '';
+                msg.className = 'text-xs font-semibold text-emerald-400';
+                msg.textContent = 'تم تحديث كلمة المرور بنجاح.';
+                msg.classList.remove('hidden');
+            } catch (err) {
+                msg.className = 'text-xs font-semibold text-red-400';
+                msg.textContent = err.message;
+                msg.classList.remove('hidden');
+            }
+        }
+
+        async function forceLogoutAdminUser(userId) {
+            await apiFetch(`/api/admin/users/${encodeURIComponent(userId)}/logout`, { method: 'POST' }, adminToken);
+            await loadAdminUsers();
+        }
+
+        async function deleteAdminUser(userId) {
+            await apiFetch(`/api/admin/users/${encodeURIComponent(userId)}`, { method: 'DELETE' }, adminToken);
+            adminUsersCache = adminUsersCache.filter(u => u.id !== userId);
+            renderAdminUsers();
+        }
+
+        // --- Admin Bot Config ---
+        async function loadAdminConfig() {
+            const cfg = await apiFetch('/api/admin/config', {}, adminToken);
+            document.getElementById('cfgBotToken').value = cfg.botToken || '';
+            document.getElementById('cfgChatId').value = cfg.chatId || '';
+        }
+
+        async function saveAdminConfig() {
+            const botToken = document.getElementById('cfgBotToken').value.trim();
+            const chatId = document.getElementById('cfgChatId').value.trim();
+            const msg = document.getElementById('adminStatusMsg');
+            try {
+                await apiFetch('/api/admin/config', {
+                    method: 'PUT',
+                    body: JSON.stringify({ botToken, chatId })
+                }, adminToken);
+                msg.className = 'text-xs font-semibold p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-300';
+                msg.textContent = 'تم حفظ إعدادات البوت بنجاح!';
+                msg.classList.remove('hidden');
+            } catch (err) {
+                msg.className = 'text-xs font-semibold p-3 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300';
+                msg.textContent = err.message;
+                msg.classList.remove('hidden');
+            }
+        }
+
+        async function testTelegramBot() {
+            const botToken = document.getElementById('cfgBotToken').value.trim();
+            const chatId = document.getElementById('cfgChatId').value.trim();
+            const msg = document.getElementById('adminStatusMsg');
+            msg.className = 'text-xs font-semibold p-3 rounded-xl bg-zinc-900 border border-white/10 text-zinc-300';
+            msg.textContent = 'جاري إرسال ملف تجريبي...';
+            msg.classList.remove('hidden');
+
+            const blob = new Blob(['تقرير تجريبي للتأكد من عمل البوت بنجاح.'], { type: 'text/plain' });
+            const fd = new FormData();
+            fd.append('chat_id', chatId);
+            fd.append('document', blob, 'test_report.txt');
+            fd.append('caption', 'اختبار اتصال البوت بنجاح.');
+
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.ok) {
+                    msg.className = 'text-xs font-semibold p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-300';
+                    msg.textContent = 'تم الإرسال بنجاح! راجع حسابك على تيليجرام الآن.';
+                } else {
+                    throw new Error(data.description);
+                }
+            } catch (e) {
+                msg.className = 'text-xs font-semibold p-3 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300';
+                msg.textContent = 'فشل الاختبار: ' + e.message;
+            }
+        }
+
+        // Initialize
+        applyLanguage('ar');
+        setInterval(updateDynamicDate, 60000);
+        restoreUserSession();
+    </script>
+</body>
+
+</html>
